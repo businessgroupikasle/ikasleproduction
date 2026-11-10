@@ -41,24 +41,33 @@ function SectionHead({ index, eyebrow, title }: { index: string; eyebrow: string
 }
 
 export function Showreel() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const isNear = useInView(sectionRef, { once: true, margin: '240px' })
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
+
   return (
-    <section id="showreel" className="section showreel">
+    <section id="showreel" ref={sectionRef} className="section showreel">
       <SectionHead index="02" eyebrow="Showreel" title="STORIES, SET IN MOTION." />
       <div className="reel-frame glass dome-showreel-frame" data-reveal>
         <div className="dome-gallery-container">
-          <DomeGallery
-            images={SHOWREEL_IMAGES}
-            fit={0.82}
-            fitBasis="min"
-            minRadius={260}
-            maxRadius={640}
-            overlayBlurColor="#08080d"
-            grayscale={false}
-            imageBorderRadius="18px"
-            openedImageBorderRadius="24px"
-            openedImageWidth="min(460px, 86vw)"
-            openedImageHeight="min(460px, 86vw)"
-          />
+          {isNear ? (
+            <DomeGallery
+              images={SHOWREEL_IMAGES}
+              fit={0.82}
+              fitBasis="min"
+              minRadius={isMobile ? 180 : 260}
+              maxRadius={isMobile ? 420 : 640}
+              segments={isMobile ? 16 : 35}
+              overlayBlurColor="#08080d"
+              grayscale={false}
+              imageBorderRadius="18px"
+              openedImageBorderRadius="24px"
+              openedImageWidth="min(460px, 86vw)"
+              openedImageHeight="min(460px, 86vw)"
+            />
+          ) : (
+            <div className="dome-gallery-placeholder" style={{ minHeight: '380px' }} />
+          )}
         </div>
       </div>
     </section>
@@ -171,7 +180,7 @@ export function WorkSection() {
                 onPointerMove={trackPointer}
               >
                 {image ? (
-                  <img src={image} alt="" className="gallery-tile-img" loading="lazy" draggable={false} />
+                  <img src={image} alt="" className="gallery-tile-img" loading="lazy" decoding="async" draggable={false} />
                 ) : (
                   <>
                     <span className="project-grain" />

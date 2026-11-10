@@ -45,9 +45,20 @@ export function Hero() {
     const el = video.current
     if (!el) return
     el.muted = true
-    const p = el.play()
-    if (p && typeof p.catch === 'function') {
-      p.catch(() => {})
+    const startPlay = () => {
+      const p = el.play()
+      if (p && typeof p.catch === 'function') {
+        p.catch(() => {})
+      }
+    }
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(startPlay, { timeout: 1200 })
+      } else {
+        setTimeout(startPlay, 600)
+      }
+    } else {
+      startPlay()
     }
   }, [])
 
@@ -60,6 +71,8 @@ export function Hero() {
     return () => el.removeEventListener('canplay', reveal)
   }, [])
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
+
   return (
     <section className="hero" ref={root} aria-labelledby="hero-title">
       <div className="hero-bg" aria-hidden="true">
@@ -67,7 +80,8 @@ export function Hero() {
           ref={video}
           className="hero-video"
           src="/assets/videos/vdx.mp4"
-          preload="metadata"
+          poster="/assets/gallery/canon-cinema-rig.jpg"
+          preload={isMobile ? 'none' : 'metadata'}
           autoPlay
           loop
           muted

@@ -78,8 +78,8 @@ export function SiteFx() {
       canvas.width = Math.round(w * dpr)
       canvas.height = Math.round(h * dpr)
       ctx?.setTransform(dpr, 0, 0, dpr, 0, 0)
-      // Fewer motes on phones keeps the layer light.
-      const count = Math.round(Math.min(46, Math.max(14, (w * h) / 36000)))
+      // Fewer motes on phones keeps the layer light and battery-friendly.
+      const count = w < 768 ? 8 : Math.round(Math.min(46, Math.max(14, (w * h) / 36000)))
       particles = Array.from({ length: count }, spawn)
     }
 

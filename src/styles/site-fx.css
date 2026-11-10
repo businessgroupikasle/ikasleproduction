@@ -384,6 +384,13 @@ body { background: transparent; }
 @media (max-width: 899px) {
   .bd-sprockets { display: none; }
   .bd-floor { height: 44vh; }
+  /* Stop heavy GPU-intensive SVG feTurbulence grain & scan repaints on mobile for instant fluid loading */
+  .bd-grain { display: none !important; animation: none !important; }
+  .bd-scan,
+  .bd-scan::after { display: none !important; animation: none !important; }
+  .bd-beam { display: none !important; animation: none !important; }
+  .bd-rings { display: none !important; animation: none !important; }
+  .bd-dust { opacity: 0.35; }
 }
 
 @media (prefers-reduced-motion: reduce) {
