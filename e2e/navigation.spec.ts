@@ -1,0 +1,32 @@
+import { expect, test } from '@playwright/test'
+
+test('gooey navigation follows routes without reloading the page', async ({ page, isMobile }, testInfo) => {
+  test.skip(isMobile)
+  await page.goto('/')
+  const nav = page.getByRole('navigation', { name: 'Primary navigation' })
+  await expect(nav.getByRole('link', { name: 'Home', exact: true })).toHaveAttribute('aria-current', 'page')
+  await page.evaluate(() => document.documentElement.dataset.navigationCheck = 'retained')
+  await nav.getByRole('link', { name: 'About', exact: true }).click()
+  await expect(page).toHaveURL(/\/about$/)
+  await expect(nav.getByRole('link', { name: 'About', exact: true })).toHaveAttribute('aria-current', 'page')
+  expect(await page.evaluate(() => document.documentElement.dataset.navigationCheck)).toBe('retained')
+  await page.waitForTimeout(1200)
+  await expect(nav.locator('canvas')).toBeVisible()
+  await page.screenshot({ path: testInfo.outputPath('gooey-navigation.png') })
+  await page.goBack()
+  await expect(nav.getByRole('link', { name: 'Home', exact: true })).toHaveAttribute('aria-current', 'page')
+  await page.goto('/work/kinetic-brand-film')
+  await expect(nav.getByRole('link', { name: 'Our Work', exact: true })).toHaveAttribute('aria-current', 'page')
+})
+
+test('gooey navigation supports keyboard and reduced motion', async ({ page, isMobile }) => {
+  test.skip(isMobile)
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+  const nav = page.getByRole('navigation', { name: 'Primary navigation' })
+  const contact = nav.getByRole('link', { name: 'Contact', exact: true })
+  await contact.focus()
+  await page.keyboard.press('Enter')
+  await expect(page).toHaveURL(/\/contact$/)
+  await expect(contact).toHaveAttribute('aria-current', 'page')
+})

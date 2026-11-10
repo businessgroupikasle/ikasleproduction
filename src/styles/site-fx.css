@@ -1,0 +1,394 @@
+/* ==========================================================================
+   SITE-WIDE LIVING BACKDROP, SCROLL PROGRESS AND TIMECODE RAIL
+   Mounted once by <SiteFx /> in the layout. Imported after global.css (see main.tsx) so the
+   "let the backdrop show through" overrides at the bottom win over page styles.
+   ========================================================================== */
+
+/* The hue is a real number so it can transition between scenes (Chrome/Edge/Safari);
+   elsewhere it simply switches. */
+@property --bd-hue {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 268;
+}
+
+.site-fx {
+  --bd-hue: 268;
+  height: 0;
+  transition: --bd-hue 1.6s ease;
+}
+
+.site-backdrop {
+  /* Layers a scene can switch on (0–1). Defaults suit the home page. */
+  --on-aurora: 1;
+  --on-floor: 0.5;
+  --on-beam: 1;
+  --on-rings: 0;
+  --on-sprockets: 0;
+  --on-scan: 0;
+  --on-dust: 1;
+
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  contain: layout paint;
+}
+
+.site-backdrop[data-scene='services'] { --on-floor: 0.75; }
+.site-backdrop[data-scene='service']  { --on-floor: 0.4; --on-sprockets: 1; --on-beam: 0.7; }
+.site-backdrop[data-scene='about']    { --on-floor: 0.3; }
+.site-backdrop[data-scene='work']     { --on-floor: 0.4; --on-sprockets: 1; --on-beam: 0.55; }
+.site-backdrop[data-scene='contact']  { --on-floor: 0.18; --on-rings: 1; --on-beam: 0.5; }
+.site-backdrop[data-scene='legal']    { --on-floor: 0; --on-beam: 0.3; --on-aurora: 0.65; --on-dust: 0.5; }
+.site-backdrop[data-scene='lost']     { --on-floor: 0; --on-beam: 0; --on-scan: 1; --on-aurora: 0.8; }
+
+/* ---------------------------------------------------------------- Aurora */
+.bd-parallax {
+  position: absolute;
+  inset: -10% 0;
+  will-change: transform;
+}
+
+.bd-aurora {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  opacity: var(--on-aurora);
+  transition: opacity 1s ease;
+  will-change: transform;
+}
+
+.bd-aurora-a {
+  width: 80vmax;
+  height: 62vmax;
+  left: -24vmax;
+  top: -20vmax;
+  background: radial-gradient(closest-side, hsl(var(--bd-hue) 85% 58% / 0.2), hsl(var(--bd-hue) 85% 50% / 0.07) 55%, transparent);
+  animation: bd-drift-a 34s ease-in-out infinite alternate;
+}
+
+.bd-aurora-b {
+  width: 70vmax;
+  height: 56vmax;
+  right: -26vmax;
+  top: 16vh;
+  background: radial-gradient(closest-side, hsl(calc(var(--bd-hue) + 32) 90% 60% / 0.15), hsl(calc(var(--bd-hue) + 32) 90% 55% / 0.05) 55%, transparent);
+  animation: bd-drift-b 41s ease-in-out infinite alternate;
+}
+
+.bd-aurora-c {
+  width: 60vmax;
+  height: 48vmax;
+  left: 18vw;
+  bottom: -26vmax;
+  background: radial-gradient(closest-side, hsl(calc(var(--bd-hue) - 28) 85% 55% / 0.14), transparent);
+  animation: bd-drift-c 47s ease-in-out infinite alternate;
+}
+
+@keyframes bd-drift-a {
+  from { transform: translate3d(-4vmax, -2vmax, 0) scale(0.92) rotate(0deg); }
+  to   { transform: translate3d(14vmax, 9vmax, 0) scale(1.08) rotate(14deg); }
+}
+@keyframes bd-drift-b {
+  from { transform: translate3d(6vmax, 4vmax, 0) scale(1.05) rotate(0deg); }
+  to   { transform: translate3d(-16vmax, -7vmax, 0) scale(0.9) rotate(-18deg); }
+}
+@keyframes bd-drift-c {
+  from { transform: translate3d(-10vmax, 3vmax, 0) scale(0.95); }
+  to   { transform: translate3d(12vmax, -8vmax, 0) scale(1.1); }
+}
+
+/* ----------------------------------------------------- Perspective stage floor */
+.bd-floor {
+  position: absolute;
+  left: -25%;
+  right: -25%;
+  bottom: -6%;
+  height: 58vh;
+  perspective: 520px;
+  perspective-origin: 50% 0;
+  opacity: var(--on-floor);
+  transition: opacity 1s ease;
+  -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.45) 45%, transparent 90%);
+  mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.45) 45%, transparent 90%);
+}
+
+.bd-floor-grid {
+  position: absolute;
+  inset: -64px 0 0;
+  transform-origin: 50% 0;
+  transform: rotateX(68deg);
+  background-image:
+    linear-gradient(hsl(var(--bd-hue) 90% 72% / 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--bd-hue) 90% 72% / 0.3) 1px, transparent 1px);
+  background-size: 64px 64px;
+  animation: bd-floor-run 5s linear infinite;
+}
+
+/* Moves one grid cell toward the viewer, so the loop is seamless. */
+@keyframes bd-floor-run {
+  from { transform: rotateX(68deg) translateY(0); }
+  to   { transform: rotateX(68deg) translateY(64px); }
+}
+
+/* -------------------------------------------------------------- Light beam */
+.bd-beam {
+  position: absolute;
+  top: -25%;
+  left: 38%;
+  width: 30vw;
+  height: 150%;
+  transform-origin: 50% 0;
+  background: linear-gradient(90deg, transparent, hsl(var(--bd-hue) 90% 82% / 0.075) 50%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, #000 10%, transparent 80%);
+  mask-image: linear-gradient(to bottom, #000 10%, transparent 80%);
+  opacity: var(--on-beam);
+  animation: bd-beam-sweep 28s ease-in-out infinite alternate;
+}
+
+@keyframes bd-beam-sweep {
+  from { transform: translateX(-42vw) rotate(16deg); }
+  to   { transform: translateX(34vw) rotate(-12deg); }
+}
+
+/* ------------------------------------------- Transmit ripples (contact scene) */
+.bd-rings {
+  position: absolute;
+  right: 6vw;
+  bottom: 12vh;
+  width: 0;
+  height: 0;
+  opacity: var(--on-rings);
+  transition: opacity 1s ease;
+}
+
+.bd-rings i {
+  position: absolute;
+  left: -30vmin;
+  top: -30vmin;
+  width: 60vmin;
+  height: 60vmin;
+  border-radius: 50%;
+  border: 1px solid hsl(var(--bd-hue) 90% 74% / 0.5);
+  opacity: 0;
+  animation: bd-ring 8s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+.bd-rings i:nth-child(2) { animation-delay: 2.6s; }
+.bd-rings i:nth-child(3) { animation-delay: 5.2s; }
+
+@keyframes bd-ring {
+  0%   { transform: scale(0.12); opacity: 0.55; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+
+/* ------------------------------------------ Film sprockets down both edges */
+.bd-sprockets {
+  position: absolute;
+  inset: 0;
+  opacity: var(--on-sprockets);
+  transition: opacity 1s ease;
+}
+
+.bd-sprockets i {
+  position: absolute;
+  top: -40px;
+  bottom: -40px;
+  width: 8px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(to bottom, hsl(var(--bd-hue) 80% 80% / 0.17) 0 16px, transparent 16px 40px);
+  animation: bd-sprocket 4.5s linear infinite;
+}
+.bd-sprockets i:first-child { left: 9px; }
+.bd-sprockets i:last-child  { right: 9px; animation-direction: reverse; }
+
+@keyframes bd-sprocket {
+  from { transform: translateY(0); }
+  to   { transform: translateY(40px); }
+}
+
+/* --------------------------------------------------------------- Light dust */
+.bd-dust {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: var(--on-dust);
+  transition: opacity 1s ease;
+}
+
+/* ------------------------------------------------------- Pointer spotlight */
+.bd-spot {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(460px circle at var(--px, 50%) var(--py, 40%), hsl(var(--bd-hue) 90% 72% / 0.09), transparent 70%);
+}
+
+@media (pointer: coarse) {
+  .bd-spot { display: none; }
+}
+
+/* --------------------------------------- Signal lost (404): scanlines + roll bar */
+.bd-scan {
+  position: absolute;
+  inset: 0;
+  opacity: var(--on-scan);
+  transition: opacity 0.8s ease;
+  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 3px);
+}
+
+.bd-scan::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 22vh;
+  top: -22vh;
+  background: linear-gradient(to bottom, transparent, hsl(var(--bd-hue) 90% 70% / 0.07), transparent);
+  animation: bd-roll 7s linear infinite;
+}
+
+@keyframes bd-roll {
+  from { transform: translateY(0); }
+  to   { transform: translateY(150vh); }
+}
+
+/* -------------------------------------------------- Vignette and film grain */
+.bd-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, transparent 45%, rgba(3, 3, 6, 0.55) 100%);
+}
+
+.bd-grain {
+  position: absolute;
+  inset: -50%;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  animation: bd-grain 1s steps(6) infinite;
+}
+
+@keyframes bd-grain {
+  0%   { transform: translate(0, 0); }
+  17%  { transform: translate(-3%, 2%); }
+  33%  { transform: translate(2%, -3%); }
+  50%  { transform: translate(-2%, -1%); }
+  67%  { transform: translate(3%, 3%); }
+  83%  { transform: translate(-1%, 2%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ===================================================== Scroll progress + rail */
+.site-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 120;
+  pointer-events: none;
+}
+
+.site-progress i {
+  display: block;
+  height: 100%;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, hsl(var(--bd-hue) 90% 60% / 0), hsl(var(--bd-hue) 95% 70%) 70%, #fff);
+  box-shadow: 0 0 12px hsl(var(--bd-hue) 95% 68% / 0.8);
+}
+
+.site-rail {
+  --p: 0;
+  display: none;
+  position: fixed;
+  right: 28px;
+  top: 50%;
+  height: min(38vh, 320px);
+  width: 14px;
+  transform: translateY(-50%);
+  z-index: 40;
+  pointer-events: none;
+}
+
+@media (min-width: 1200px) {
+  .site-rail { display: block; }
+}
+
+.site-rail-track {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.24) 14%, rgba(255, 255, 255, 0.24) 86%, transparent);
+}
+
+/* Tick marks, like the scale on a timeline. */
+.site-rail-track::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 6%;
+  bottom: 6%;
+  width: 9px;
+  background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 0 1px, transparent 1px 13px);
+}
+
+.site-rail-thumb {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--p) * 100%);
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: hsl(var(--bd-hue) 92% 74%);
+  box-shadow: 0 0 0 4px hsl(var(--bd-hue) 92% 70% / 0.16), 0 0 16px hsl(var(--bd-hue) 95% 68%);
+}
+
+.site-rail-time {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 14px);
+  transform: translateX(-50%);
+  writing-mode: vertical-rl;
+  font: 600 0.58rem/1 ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   LET THE BACKDROP SHOW THROUGH
+   Page shells used to paint an opaque near-black over everything. They are made
+   transparent (or translucent, so alternating bands still read) here, in one place.
+   ========================================================================== */
+body { background: transparent; }
+
+.hero,
+.service-detail-page,
+.work-page,
+.contact-page { background: transparent; background-color: transparent; }
+
+.showreel { background: rgba(8, 8, 11, 0.55); }
+.work-section { background: rgba(9, 9, 13, 0.5); }
+.statement { background: rgba(3, 3, 4, 0.5); }
+.contact-section { background: rgba(10, 10, 14, 0.55); }
+.footer { background: rgba(5, 5, 7, 0.72); }
+
+/* The old static spot of light in page heroes is replaced by the live backdrop. */
+.page-hero { background: none; }
+
+@media (max-width: 899px) {
+  .bd-sprockets { display: none; }
+  .bd-floor { height: 44vh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bd-grain,
+  .bd-beam,
+  .bd-scan::after { animation: none !important; }
+  .bd-rings { display: none; }
+}

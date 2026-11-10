@@ -1,0 +1,750 @@
+/* ==========================================================================
+   IKASLÉ PRODUCTION — ABOUT PAGE
+   Builds on service-detail.css (page shell, atmosphere, hero, dividers, CTA,
+   section headers) and the Services-page card styles in global.css.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Hero: gradient accent word + viewfinder
+   -------------------------------------------------------------------------- */
+.about-page .svc-main-heading .about-accent {
+  background: linear-gradient(180deg, #e6d8ff 5%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.about-viewfinder {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 26px;
+  overflow: hidden;
+  background: #08070d;
+  border: 1px solid rgba(196, 162, 255, 0.28);
+  box-shadow: 0 35px 90px rgba(0, 0, 0, 0.85), 0 0 70px rgba(139, 92, 246, 0.18);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.about-viewfinder:hover {
+  border-color: rgba(196, 162, 255, 0.5);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9), 0 0 90px rgba(139, 92, 246, 0.28);
+}
+
+.about-vf-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.95rem 1.45rem;
+  background: rgba(12, 10, 18, 0.96);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.about-vf-frame {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-display), monospace;
+  font-size: 0.72rem;
+  color: #b3afbf;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.about-viewfinder .hud-rec-dot {
+  background: #ef4444;
+  box-shadow: 0 0 9px #ef4444;
+}
+
+.about-vf-viewport {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  background: #020204;
+}
+
+/* Frames are stacked; the active one "pulls focus" from a heavy blur to sharp. */
+.about-vf-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+.about-vf-img.is-active {
+  z-index: 1;
+  opacity: 1;
+  animation: about-rack-focus 1.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes about-rack-focus {
+  0% { filter: blur(18px) brightness(0.65) saturate(1.3); transform: scale(1.12); }
+  55% { filter: blur(3px) brightness(0.95) saturate(1.1); }
+  100% { filter: blur(0) brightness(1) saturate(1); transform: scale(1); }
+}
+
+.about-vf-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(5, 5, 7, 0.25) 0%, transparent 35%, rgba(5, 5, 7, 0.88) 100%);
+}
+
+.about-vf-hud {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Focus bracket: starts wide and soft, closes in on the subject and locks purple. */
+.about-focus-bracket {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  animation: about-focus-lock 1.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.about-focus-bracket span {
+  position: absolute;
+  width: 24%;
+  height: 24%;
+  border: 2px solid #ffffff;
+  animation: about-bracket-color 1.3s ease both;
+}
+
+.about-focus-bracket span:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.about-focus-bracket span:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+.about-focus-bracket span:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+.about-focus-bracket span:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+
+@keyframes about-focus-lock {
+  0% { opacity: 0.15; transform: scale(2.1); }
+  55% { opacity: 1; transform: scale(0.9); }
+  72% { transform: scale(1.04); }
+  100% { opacity: 0.85; transform: scale(1); }
+}
+
+@keyframes about-bracket-color {
+  0%, 55% { border-color: #ffffff; filter: none; }
+  72%, 100% { border-color: #c4a2ff; filter: drop-shadow(0 0 6px rgba(196, 162, 255, 0.95)); }
+}
+
+.about-vf-caption {
+  position: absolute;
+  left: 1.5rem;
+  right: 1.5rem;
+  bottom: 1.3rem;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  animation: about-caption-in 0.7s 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.about-vf-label {
+  font: 700 0.68rem var(--font-display);
+  letter-spacing: 0.2em;
+  color: #c4a2ff;
+}
+
+.about-vf-text {
+  font: 650 var(--fs-card)/1.2 var(--font-display);
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+@keyframes about-caption-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+.about-vf-bottom {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  padding: 0.9rem 1.2rem 1rem;
+  background: rgba(12, 10, 18, 0.96);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.about-vf-tick {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.2rem 0;
+  background: none;
+  border: none;
+  color: #8b8796;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.about-vf-tick:hover,
+.about-vf-tick.is-active {
+  color: #ffffff;
+}
+
+.about-vf-tick-bar {
+  position: relative;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.about-vf-tick-bar i {
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, #8b5cf6, #c4a2ff);
+}
+
+/* Fills over the auto-advance interval (keep 5.5s in sync with AUTO_ADVANCE_MS in AboutHero.tsx). */
+.about-vf-tick.is-active .about-vf-tick-bar i {
+  animation: about-tick-fill 5.5s linear both;
+}
+
+.about-viewfinder[data-paused='true'] .about-vf-tick.is-active .about-vf-tick-bar i {
+  animation: none;
+  transform: scaleX(1);
+  opacity: 0.55;
+}
+
+@keyframes about-tick-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.about-vf-tick-label {
+  font: 700 0.62rem var(--font-display);
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Manifesto: outline number, word-by-word statement, body copy
+   -------------------------------------------------------------------------- */
+.about-manifesto,
+.about-crafts,
+.about-process {
+  position: relative;
+  z-index: 2;
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: clamp(2.8rem, 5vw, 4.5rem) var(--pad);
+}
+
+.about-manifesto-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 7rem);
+  align-items: start;
+}
+
+.about-manifesto-mark {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  margin-bottom: 1.4rem;
+}
+
+.about-manifesto-number {
+  font: 800 clamp(2.4rem, 4vw, 3.4rem)/1 var(--font-display);
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(196, 162, 255, 0.6);
+}
+
+.about-manifesto-rule {
+  flex: 1;
+  max-width: 14rem;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.8), transparent);
+  transform-origin: left;
+}
+
+.about-manifesto-mark[data-reveal-state='in'] .about-manifesto-rule {
+  animation: about-rule-draw 1.2s 0.25s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+@keyframes about-rule-draw {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.about-manifesto-statement {
+  margin: 0.9rem 0 0;
+  font: 750 var(--fs-title)/1.08 var(--font-display);
+  letter-spacing: -0.055em;
+  color: #ffffff;
+}
+
+.about-word {
+  display: inline-block;
+}
+
+.about-word.is-accent {
+  color: #c4a2ff;
+  text-shadow: 0 0 44px rgba(139, 92, 246, 0.6);
+}
+
+/* Words come into focus one after another (blur → sharp), echoing the hero's rack focus. */
+.about-word[data-reveal-state='in'] {
+  animation: about-word-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(var(--reveal-delay, 0) * 90ms);
+}
+
+@keyframes about-word-in {
+  from { opacity: 0; filter: blur(12px); transform: translateY(0.35em); }
+  to { opacity: 1; filter: blur(0); transform: none; }
+}
+
+.about-manifesto-body {
+  padding-left: clamp(1rem, 2vw, 1.6rem);
+  border-left: 1px solid rgba(139, 92, 246, 0.4);
+}
+
+.about-manifesto-body p {
+  margin: 0 0 1.5rem;
+  color: #b9b5c2;
+  font-size: var(--fs-lede);
+  line-height: 1.75;
+}
+
+.about-manifesto-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Principles: spotlight cards
+   -------------------------------------------------------------------------- */
+.about-principles {
+  list-style: none;
+  margin: clamp(3.5rem, 6vw, 6rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.about-principle {
+  position: relative;
+  padding: 1.8rem 1.6rem 2.1rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.4s ease;
+}
+
+/* The spotlight follows the cursor via --mx / --my (set by trackPointer). */
+.about-principle-glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 0%), rgba(196, 162, 255, 0.22), transparent 62%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.about-principle:hover {
+  transform: translateY(-6px);
+  border-color: rgba(196, 162, 255, 0.42);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.6), 0 0 45px rgba(139, 92, 246, 0.18);
+}
+
+.about-principle:hover .about-principle-glow {
+  opacity: 1;
+}
+
+.about-principle-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.6rem;
+}
+
+.about-principle-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(139, 92, 246, 0.16);
+  border: 1px solid rgba(139, 92, 246, 0.36);
+  color: #c4a2ff;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease, color 0.3s ease;
+}
+
+.about-principle:hover .about-principle-icon {
+  transform: rotate(-8deg) scale(1.1);
+  background: #8b5cf6;
+  color: #ffffff;
+}
+
+.about-principle-index {
+  font: 800 2rem/1 var(--font-display);
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.22);
+  transition: -webkit-text-stroke-color 0.3s ease;
+}
+
+.about-principle:hover .about-principle-index {
+  -webkit-text-stroke-color: rgba(196, 162, 255, 0.75);
+}
+
+.about-principle h3 {
+  margin: 0 0 0.7rem;
+  font: 650 var(--fs-card)/1.2 var(--font-display);
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+.about-principle p {
+  margin: 0;
+  color: #aaa7b4;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.about-principle-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #8b5cf6, #c4a2ff);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.about-principle:hover .about-principle-line {
+  transform: scaleX(1);
+}
+
+/* --------------------------------------------------------------------------
+   Crafts: service cards (base styles live in global.css)
+   -------------------------------------------------------------------------- */
+.about-craft-spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), rgba(196, 162, 255, 0.24), transparent 65%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.about-craft-card:hover .about-craft-spotlight {
+  opacity: 1;
+}
+
+/* On hover each icon plays its service's signature motion (see the hero badges in service-detail.css). */
+.about-craft-card[data-effect='shutter']:hover .service-theme-icon-wrap svg {
+  animation: svc-spin-slow 5s linear infinite;
+}
+
+.about-craft-card[data-effect='clapper']:hover .service-theme-icon-wrap svg {
+  transform-origin: 18% 82%;
+  animation: svc-clap-idle 1.8s ease-in-out infinite;
+}
+
+.about-craft-card[data-effect='publish']:hover .service-theme-icon-wrap svg {
+  animation: svc-pulse-idle 1.6s ease-in-out infinite;
+}
+
+.about-craft-card[data-effect='spark']:hover .service-theme-icon-wrap svg {
+  animation: svc-glow-idle 1.6s ease-in-out infinite;
+}
+
+/* --------------------------------------------------------------------------
+   Process: film strip with a sweeping playhead
+   -------------------------------------------------------------------------- */
+.about-strip-wrap {
+  /* Negative margin + equal padding gives hover glows room without clipping or causing page overflow. */
+  margin-inline: -1rem;
+  padding: 1.4rem 1rem 2rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 92, 246, 0.5) transparent;
+}
+
+.about-strip-wrap:focus-visible {
+  outline-offset: 2px;
+}
+
+.about-strip-inner {
+  position: relative;
+  min-width: 100%;
+}
+
+.about-strip {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.about-frame-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  background: #0b0a10;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  outline: none;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, border-color 0.3s ease, box-shadow 0.4s ease;
+}
+
+/* Film sprocket holes along the top and bottom edge of every frame. */
+.about-sprockets {
+  display: block;
+  height: 22px;
+  background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.17) 0 10px, transparent 10px 22px);
+  background-size: 100% 8px;
+  background-repeat: no-repeat;
+  background-position: 6px center;
+  opacity: 0.8;
+}
+
+.about-sprockets.is-top {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.about-sprockets.is-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.about-frame-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.2rem 1.05rem 1.3rem;
+}
+
+.about-frame-index {
+  margin-bottom: 1.1rem;
+  font: 800 clamp(2rem, 2.8vw, 2.8rem)/1 var(--font-display);
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(196, 162, 255, 0.55);
+  transition: color 0.35s ease, -webkit-text-stroke-color 0.35s ease;
+}
+
+.about-frame-body h3 {
+  margin: 0 0 0.6rem;
+  font: 650 var(--fs-card)/1.2 var(--font-display);
+  letter-spacing: -0.03em;
+  color: #e9e6f0;
+  transition: color 0.3s ease;
+}
+
+.about-frame-body p {
+  margin: 0 0 1.3rem;
+  color: #9e9aa9;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
+/* Shows how far through the project this stage sits (1/6 … 6/6). */
+.about-frame-meter {
+  display: block;
+  margin-top: auto;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.about-frame-meter i {
+  display: block;
+  height: 100%;
+  width: calc((var(--frame) + 1) / 6 * 100%);
+  background: linear-gradient(90deg, #8b5cf6, #c4a2ff);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.about-frame-card[data-reveal-state='in'] .about-frame-meter i {
+  animation: about-meter-fill 1s calc(var(--reveal-delay, 0) * 70ms + 0.35s) cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+@keyframes about-meter-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.about-frame-card:hover,
+.about-frame-card:focus-visible {
+  transform: translateY(-8px);
+  border-color: rgba(196, 162, 255, 0.5);
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(139, 92, 246, 0.22);
+}
+
+.about-frame-card:hover .about-frame-index,
+.about-frame-card:focus-visible .about-frame-index {
+  color: rgba(139, 92, 246, 0.25);
+  -webkit-text-stroke-color: #c4a2ff;
+}
+
+.about-frame-card:hover h3,
+.about-frame-card:focus-visible h3 {
+  color: #ffffff;
+}
+
+/* While one frame is inspected, the rest of the strip dims, like a lit frame on a light table. */
+.about-strip:has(.about-frame-card:hover) .about-frame-card:not(:hover),
+.about-strip:has(.about-frame-card:focus-visible) .about-frame-card:not(:focus-visible) {
+  opacity: 0.45;
+}
+
+.about-playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  width: 2px;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(180deg, transparent, #c4a2ff 12%, #c4a2ff 88%, transparent);
+  box-shadow: 0 0 24px 4px rgba(139, 92, 246, 0.7);
+}
+
+/* One sweep across the strip, timed so each frame lights up as the line passes (6 frames × 350ms). */
+.about-strip-wrap[data-reveal-state='in'] .about-playhead {
+  animation: about-playhead-sweep 2.2s linear 0.1s both;
+}
+
+@keyframes about-playhead-sweep {
+  0% { left: 0; opacity: 0; }
+  6% { opacity: 1; }
+  94% { opacity: 1; }
+  100% { left: calc(100% - 2px); opacity: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1180px) {
+  .about-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  /* Two rows: a single sweep no longer maps to the frames, so light them up in a short cascade instead. */
+  .about-playhead {
+    display: none;
+  }
+
+  .about-frame-card[data-reveal-state='in'] {
+    animation-delay: calc(var(--frame) * 110ms);
+  }
+}
+
+@media (max-width: 940px) {
+  .about-manifesto-grid {
+    grid-template-columns: 1fr;
+    gap: 2.2rem;
+  }
+
+  .about-principles {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .about-vf-top {
+    padding: 0.8rem 1.1rem;
+  }
+
+  .about-vf-tick-label {
+    font-size: 0.56rem;
+    letter-spacing: 0.08em;
+  }
+
+  /* Mobile: Clean full-width vertical film roll layout (no cut-off frames, no horizontal scroll clipping) */
+  .about-strip-wrap {
+    overflow-x: visible;
+    margin-inline: 0;
+    padding: 0.5rem 0 1.5rem;
+    scroll-snap-type: none;
+  }
+
+  .about-strip {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-flow: row;
+    gap: 1.15rem;
+    width: 100%;
+  }
+
+  .about-frame-card {
+    width: 100%;
+    scroll-snap-align: none;
+  }
+
+  .about-frame-body {
+    padding: 1.25rem 1.15rem 1.3rem;
+  }
+
+  .about-frame-body p {
+    text-align: left !important;
+    margin-bottom: 1.1rem;
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  .about-frame-card[data-reveal-state='in'] {
+    animation-delay: 0s;
+  }
+
+  .about-playhead {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Motion safety: show everything in its final state, without the effects.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .about-vf-img.is-active,
+  .about-focus-bracket,
+  .about-focus-bracket span,
+  .about-vf-caption,
+  .about-vf-tick.is-active .about-vf-tick-bar i,
+  .about-manifesto-mark[data-reveal-state='in'] .about-manifesto-rule,
+  .about-word[data-reveal-state='in'],
+  .about-frame-card[data-reveal-state='in'] .about-frame-meter i,
+  .about-craft-card:hover .service-theme-icon-wrap svg {
+    animation: none !important;
+  }
+
+  .about-vf-tick.is-active .about-vf-tick-bar i {
+    transform: scaleX(1);
+  }
+
+  .about-playhead {
+    display: none;
+  }
+}

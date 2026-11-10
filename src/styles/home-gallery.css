@@ -1,0 +1,242 @@
+/* ==========================================================================
+   HOME — SELECTED WORK GALLERY
+   A compact masonry of small rounded tiles (WorkSection in components/home/HomeSections.tsx).
+   Tall and short tiles alternate across the columns and every column ends on the same line.
+
+   It is plain CSS grid. One grid row is a fixed fraction of a column's width (container query
+   units) and each tile spans a set number of rows, so the columns stay level at every width.
+   Tiles pack themselves under the shortest column, and the span pattern repeats every five tiles,
+   so swapping the sample projects for a different number of real ones still tiles neatly.
+
+   Visual language is the site's own: violet accent, dark glass edges, Space Grotesk titles.
+   ========================================================================== */
+
+.gallery-wrap {
+  container-type: inline-size;
+  max-width: 1600px;
+  margin-inline: auto;
+  margin-bottom: 2rem;
+}
+
+.gallery-grid {
+  --gap: clamp(0.5rem, 0.9vw, 0.8rem);
+  --cols: 3;
+  --rows-per-col: 12;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  grid-auto-flow: row dense;
+  gap: var(--gap);
+  /* Fallback row height for browsers without container query units. */
+  grid-auto-rows: clamp(2.6rem, 4.2vw, 3.6rem);
+  grid-auto-rows: calc((100cqw - (var(--cols) - 1) * var(--gap)) / var(--cols) / var(--rows-per-col));
+}
+
+/* Three columns: 13 rows tall on the left, then 5 + 8 and 8 + 5, so the two right-hand columns
+   stagger against each other while all three finish together. */
+.gallery-tile:nth-child(5n + 1) { grid-row: span 13; }
+.gallery-tile:nth-child(5n + 2) { grid-row: span 5; }
+.gallery-tile:nth-child(5n + 3) { grid-row: span 8; }
+.gallery-tile:nth-child(5n + 4) { grid-row: span 8; }
+.gallery-tile:nth-child(5n + 5) { grid-row: span 5; }
+
+/* Two columns on tablets and phones: 8 + 6 + 5 against 9 + 10. */
+@media (max-width: 999px) {
+  .gallery-grid {
+    --cols: 2;
+    --rows-per-col: 8;
+  }
+
+  .gallery-tile:nth-child(5n + 1) { grid-row: span 8; }
+  .gallery-tile:nth-child(5n + 2) { grid-row: span 9; }
+  .gallery-tile:nth-child(5n + 3) { grid-row: span 6; }
+  .gallery-tile:nth-child(5n + 4) { grid-row: span 10; }
+  .gallery-tile:nth-child(5n + 5) { grid-row: span 5; }
+}
+
+/* ------------------------------------------------------------------- Tile */
+.gallery-tile {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: clamp(12px, 1.3vw, 18px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 0.35s, box-shadow 0.35s;
+}
+
+/* The same violet edge and glow the old project cards had. */
+.gallery-tile:hover,
+.gallery-tile:focus-visible {
+  border-color: rgba(196, 162, 255, 0.4);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 30px rgba(139, 92, 246, 0.12);
+}
+
+.gallery-tile-img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--focus, 50% 40%);
+  transition: transform 0.9s var(--ease);
+}
+
+.gallery-tile:hover .gallery-tile-img,
+.gallery-tile:focus-visible .gallery-tile-img {
+  transform: scale(1.05);
+}
+
+/* Where each photo is cropped, so the subject survives both the tall and the banner tiles. */
+.gallery-tile.project-violet { --focus: 50% 45%; }
+.gallery-tile.project-silver { --focus: 55% 88%; }
+.gallery-tile.project-amber { --focus: 50% 26%; }
+.gallery-tile.project-blue { --focus: 50% 48%; }
+.gallery-tile.project-rose { --focus: 50% 42%; }
+
+/* Reading scrim under the caption; it deepens on hover, like the reference's dark veil. */
+.gallery-tile-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(5, 5, 7, 0.9) 0%,
+    rgba(5, 5, 7, 0.55) 22%,
+    rgba(5, 5, 7, 0.12) 46%,
+    rgba(5, 5, 7, 0) 62%
+  );
+}
+
+.gallery-tile-shade::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 6, 16, 0.5);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.gallery-tile:hover .gallery-tile-shade::after,
+.gallery-tile:focus-visible .gallery-tile-shade::after {
+  opacity: 1;
+}
+
+/* The "+" that opens the case study. It spins and scales in over the middle of the tile. */
+.gallery-tile-plus {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: clamp(44px, 4vw, 58px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #8b5cf6;
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.55), 0 0 0 6px rgba(139, 92, 246, 0.2);
+  pointer-events: none;
+  opacity: 0;
+  translate: -50% -50%;
+  rotate: -90deg;
+  scale: 0.4;
+  transition: opacity 0.3s, rotate 0.5s var(--ease), scale 0.5s var(--ease);
+}
+
+.gallery-tile:hover .gallery-tile-plus,
+.gallery-tile:focus-visible .gallery-tile-plus {
+  opacity: 1;
+  rotate: 0deg;
+  scale: 1;
+}
+
+/* Caption: category over title, bottom left. It is always visible, so touch screens get it too. */
+.gallery-tile-caption {
+  position: absolute;
+  z-index: 2;
+  left: clamp(0.7rem, 1.2vw, 1rem);
+  right: clamp(0.7rem, 1.2vw, 1rem);
+  bottom: clamp(0.65rem, 1.1vw, 0.95rem);
+  transition: translate 0.5s var(--ease);
+}
+
+.gallery-tile-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.gallery-tile-caption small {
+  color: #d0ccd6;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.gallery-tile-year {
+  flex: none;
+  color: #aaa6b1;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.gallery-tile-caption h3 {
+  margin: 0.28rem 0 0;
+  font: 650 var(--fs-card)/1.12 var(--font-display);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.gallery-tile:hover .gallery-tile-caption,
+.gallery-tile:focus-visible .gallery-tile-caption {
+  translate: 0 -2px;
+}
+
+/* A project without a photo keeps the tinted card with the film mark (see the .project-* tones). */
+.gallery-tile .project-symbol {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  transition: transform 0.45s, opacity 0.3s;
+}
+
+.gallery-tile:hover .project-symbol {
+  opacity: 0;
+  transform: scale(1.12) rotate(5deg);
+}
+
+/* ------------------------------------------------------------ Small screens */
+@media (max-width: 720px) {
+  .gallery-tile-caption h3 { font-size: clamp(0.9rem, 4.2vw, 1.05rem); }
+  .gallery-tile-caption small { font-size: 0.54rem; letter-spacing: 0.12em; }
+
+  /* The tiles are too narrow for the year beside the category. It stays in the DOM for screen readers. */
+  .gallery-tile-year {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Touch has no hover, so the "+" would only ever show up stuck after a tap. */
+@media (hover: none) {
+  .gallery-tile-plus { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-tile:hover .gallery-tile-img,
+  .gallery-tile:focus-visible .gallery-tile-img { transform: none; }
+  .gallery-tile:hover .gallery-tile-caption,
+  .gallery-tile:focus-visible .gallery-tile-caption { translate: none; }
+}
