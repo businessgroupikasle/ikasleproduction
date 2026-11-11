@@ -433,6 +433,26 @@
   color: #ef4444;
 }
 
+.contact-submit-error {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  background: rgba(239, 68, 68, 0.1);
+  color: #fecaca;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.contact-submit-error-link {
+  color: #c4a2ff;
+  font-weight: 600;
+  text-decoration: underline;
+  align-self: flex-start;
+}
+
 .contact-field-textarea {
   resize: vertical;
   min-height: 95px;

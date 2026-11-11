@@ -17,6 +17,7 @@
     "gsap": "latest",
     "lucide-react": "^1.69.0",
     "motion": "latest",
+    "nodemailer": "^10.5.0",
     "react": "latest",
     "react-dom": "latest",
     "react-router": "latest"
@@ -28,6 +29,7 @@
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
     "@types/node": "latest",
+    "@types/nodemailer": "^8.0.2",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@vitejs/plugin-react": "latest",

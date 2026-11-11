@@ -1,9 +1,12 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import Contact from '../pages/Contact'
 
 describe('Contact Page Revamp', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
   it('renders hero, studio status, and direct contact cards', () => {
     render(
       <MemoryRouter>
@@ -48,7 +51,12 @@ describe('Contact Page Revamp', () => {
     expect(screen.getByText(/Please provide a brief description/i)).toBeInTheDocument()
   })
 
-  it('submits valid brief and shows cinematic confirmation slate', async () => {
+  it('submits valid brief to /api/contact and shows cinematic confirmation slate', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({ success: true, message: 'Brief transmitted successfully.' }),
+    } as Response)
+
     render(
       <MemoryRouter>
         <Contact />
@@ -65,15 +73,70 @@ describe('Contact Page Revamp', () => {
     const submitBtn = screen.getByRole('button', { name: /Transmit Production Brief/i })
     fireEvent.click(submitBtn)
 
-    // Wait for cinematic encoding
+    // Wait for cinematic confirmation slate
     await waitFor(() => {
       expect(screen.getByText(/TRANSMISSION CONFIRMED/i)).toBeInTheDocument()
     }, { timeout: 3000 })
+
+    expect(fetchSpy).toHaveBeenCalledTimes(1)
+    expect(fetchSpy).toHaveBeenCalledWith(
+      '/api/contact',
+      expect.objectContaining({
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      })
+    )
+    const requestInit = fetchSpy.mock.calls[0][1]
+    const payload = JSON.parse(String(requestInit?.body))
+    expect(payload).toMatchObject({
+      name: 'Arjun Das',
+      email: 'arjun@filmstudio.com',
+      phone: '+91 98765 43210',
+      discipline: 'Video Production',
+      message: 'We need a high-energy commercial film for our upcoming sports beverage launch.',
+    })
+    expect(payload.referenceId).toMatch(/^IKL-2026-\d{4}$/)
 
     expect(screen.getByText(/REF IKL-2026-/i)).toBeInTheDocument()
     expect(screen.getByText(/Thank you/i)).toBeInTheDocument()
     expect(screen.getByText('Arjun Das')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Copy Slate Reference/i })).toBeInTheDocument()
+
+    // Confirmation slate auto-closes after 3 seconds and resets the form
+    await waitFor(() => {
+      expect(screen.queryByText(/TRANSMISSION CONFIRMED/i)).not.toBeInTheDocument()
+    }, { timeout: 4500 })
+
+    expect(screen.getByRole('button', { name: /Transmit Production Brief/i })).toBeInTheDocument()
+    expect((screen.getByLabelText(/Your Name \*/i) as HTMLInputElement).value).toBe('')
+  })
+
+  it('shows an error alert with fallback mailto link if brief transmission fails', async () => {
+    vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('Network error'))
+
+    render(
+      <MemoryRouter>
+        <Contact />
+      </MemoryRouter>
+    )
+
+    fireEvent.change(screen.getByLabelText(/Your Name \*/i), { target: { value: 'Arjun Das' } })
+    fireEvent.change(screen.getByLabelText(/Email Address \*/i), { target: { value: 'arjun@filmstudio.com' } })
+    fireEvent.change(screen.getByLabelText(/Phone \/ WhatsApp \*/i), { target: { value: '+91 98765 43210' } })
+    fireEvent.change(screen.getByLabelText(/Project Narrative & Creative Brief \*/i), {
+      target: { value: 'We need a high-energy commercial film for our upcoming sports beverage launch.' },
+    })
+
+    fireEvent.click(screen.getByRole('button', { name: /Transmit Production Brief/i }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toHaveTextContent(/Network error/i)
+    })
+    expect(screen.getByRole('link', { name: /Send via Email App \(businessgroupikasle@gmail\.com\)/i })).toBeInTheDocument()
+    expect(screen.queryByText(/TRANSMISSION CONFIRMED/i)).not.toBeInTheDocument()
   })
 
   it('toggles FAQ accordion items', () => {

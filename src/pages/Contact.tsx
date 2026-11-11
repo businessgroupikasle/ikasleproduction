@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { useSearchParams } from 'react-router'
 import {
   Camera,
@@ -23,6 +23,10 @@ import {
   playCameraShutterSound,
   playClapperActionSound,
 } from '../utils/cameraShutter'
+
+const BRIEF_RECIPIENT_EMAIL = 'businessgroupikasle@gmail.com'
+const CONTACT_API_ENDPOINT = '/api/contact'
+const CONFIRMATION_AUTO_CLOSE_MS = 3000
 
 const SERVICES_OPTIONS = [
   { id: 'photography', label: 'Photography', icon: Camera },
@@ -106,10 +110,34 @@ export default function Contact() {
   )
 
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submittedSlate, setSubmittedSlate] = useState<SubmittedSlate | null>(null)
   const [copiedText, setCopiedText] = useState<string | null>(null)
   const [faqOpen, setFaqOpen] = useState<number | null>(0)
+
+  const resetAfterSubmit = () => {
+    setSubmittedSlate(null)
+    setSubmitError(null)
+    setName('')
+    setEmail('')
+    setPhone('')
+    setBrand('')
+    setLink('')
+    setShowLinkField(false)
+    setMessage('')
+    setErrors({})
+  }
+
+  useEffect(() => {
+    if (!submittedSlate) {
+      return
+    }
+    const timer = window.setTimeout(() => {
+      resetAfterSubmit()
+    }, CONFIRMATION_AUTO_CLOSE_MS)
+    return () => window.clearTimeout(timer)
+  }, [submittedSlate])
 
   // Copy helper
   const handleCopy = (text: string, label: string) => {
@@ -139,8 +167,9 @@ export default function Contact() {
   }
 
   // Submit handler
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setSubmitError(null)
     if (!validateForm()) {
       return
     }
@@ -148,20 +177,50 @@ export default function Contact() {
     setIsSubmitting(true)
     playCameraShutterSound()
 
-    // Simulate clean cinematic transmission
-    setTimeout(() => {
-      setIsSubmitting(false)
+    const refId = `IKL-2026-${Math.floor(1000 + Math.random() * 9000)}`
+    const activeServiceName =
+      SERVICES_OPTIONS.find((s) => s.id === selectedService)?.label ?? selectedService
+
+    try {
+      const response = await fetch(CONTACT_API_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          brand: brand.trim(),
+          discipline: activeServiceName,
+          timeline: selectedTimeline,
+          budget: selectedBudget,
+          referenceLink: link.trim(),
+          message: message.trim(),
+          referenceId: refId,
+        }),
+      })
+
+      const data = (await response.json().catch(() => null)) as
+        | { success?: boolean; message?: string }
+        | null
+
+      const isSuccess = response.ok && data?.success === true
+
+      if (!isSuccess) {
+        throw new Error(
+          data?.message ||
+            `Unable to send brief right now. Please email ${BRIEF_RECIPIENT_EMAIL} directly.`
+        )
+      }
+
       playClapperActionSound()
-
-      const refId = `IKL-2026-${Math.floor(1000 + Math.random() * 9000)}`
-      const activeServiceName =
-        SERVICES_OPTIONS.find((s) => s.id === selectedService)?.label ?? selectedService
-
       setSubmittedSlate({
         refId,
-        name,
-        email,
-        phone,
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
         service: activeServiceName,
         timeline: selectedTimeline,
         budget: selectedBudget,
@@ -173,7 +232,15 @@ export default function Contact() {
       })
 
       window.scrollTo({ top: 320, behavior: 'smooth' })
-    }, 600)
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error && err.message
+          ? err.message
+          : `Unable to send brief right now. Please email ${BRIEF_RECIPIENT_EMAIL} directly.`
+      setSubmitError(errorMessage)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -403,14 +470,15 @@ export default function Contact() {
                     <button
                       type="button"
                       className="button button-secondary"
-                      onClick={() => {
-                        setSubmittedSlate(null)
-                        setMessage('')
-                      }}
+                      onClick={resetAfterSubmit}
                     >
                       Send Another Brief
                     </button>
                   </div>
+
+                  <p style={{ color: '#9a95ab', margin: 0, fontSize: '0.76rem' }}>
+                    This confirmation closes automatically in 3 seconds.
+                  </p>
                 </div>
               </div>
             ) : (
@@ -599,6 +667,22 @@ export default function Contact() {
                     </div>
                   )}
                 </div>
+
+                {submitError && (
+                  <div className="contact-submit-error" role="alert">
+                    <p style={{ margin: 0 }}>{submitError}</p>
+                    <a
+                      href={`mailto:${BRIEF_RECIPIENT_EMAIL}?subject=${encodeURIComponent(
+                        `Production Brief - ${SERVICES_OPTIONS.find((s) => s.id === selectedService)?.label ?? selectedService}`
+                      )}&body=${encodeURIComponent(
+                        `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nBrand: ${brand || 'N/A'}\nTimeline: ${selectedTimeline}\nBudget: ${selectedBudget}\nReference Link: ${link || 'N/A'}\n\nBrief:\n${message}`
+                      )}`}
+                      className="contact-submit-error-link"
+                    >
+                      Send via Email App ({BRIEF_RECIPIENT_EMAIL})
+                    </a>
+                  </div>
+                )}
 
                 {/* Submit Action */}
                 <button
