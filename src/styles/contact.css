@@ -449,9 +449,11 @@
   box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15) !important;
 }
 
-.contact-field-wrap .phone-input-group .phone-country-select {
-  padding: 0.75rem 1.6rem 0.75rem 0.75rem;
-  font-size: 0.84rem;
+.contact-field-wrap .phone-country-picker {
+  flex: 0 0 88px;
+  width: 88px;
+  min-width: 88px;
+  max-width: 88px;
 }
 
 .contact-field-wrap .phone-input-group .phone-text-input {

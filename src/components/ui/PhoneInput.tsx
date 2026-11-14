@@ -85,7 +85,12 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
     <div className={`phone-input-root ${className}`}>
       {name && <input type="hidden" name={name} value={fullPhone} />}
       <div className={`phone-input-group ${error ? 'has-error' : ''}`}>
-        <div className="phone-country-picker">
+        <div className="phone-country-picker" title={`Country: ${currentCountry.name} (${currentCountry.dialCode})`}>
+          <span className="phone-country-display" aria-hidden="true">
+            <span className="phone-country-flag">{currentCountry.flag}</span>
+            <span className="phone-country-dial">{currentCountry.dialCode}</span>
+          </span>
+          <ChevronDown size={13} className="phone-country-chevron" aria-hidden="true" />
           <select
             id={id ? `${id}-country` : undefined}
             className="phone-country-select"
@@ -101,7 +106,6 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
               </option>
             ))}
           </select>
-          <ChevronDown size={14} className="phone-country-chevron" aria-hidden="true" />
         </div>
 
         <input

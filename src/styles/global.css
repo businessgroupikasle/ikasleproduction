@@ -220,17 +220,31 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 /* Phone Input Unified Component */
 .phone-input-root { display: flex; flex-direction: column; gap: 0.35rem; width: 100%; }
-.phone-input-group { display: flex; align-items: stretch; width: 100%; position: relative; background: rgba(0, 0, 0, 0.28); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 11px; transition: border-color 0.2s, box-shadow 0.2s; overflow: hidden; }
+.phone-input-group { display: flex; align-items: stretch; width: 100%; position: relative; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 11px; transition: border-color 0.2s, box-shadow 0.2s; overflow: hidden; }
 .phone-input-group:focus-within { border-color: #9f75f9; box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.13); }
 .phone-input-group.has-error { border-color: #ff9fae !important; box-shadow: 0 0 0 2px rgba(255, 159, 174, 0.2) !important; }
-.phone-country-picker { position: relative; display: flex; align-items: center; flex-shrink: 0; border-right: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.04); }
-.phone-input-group .phone-country-select { width: auto; appearance: none; background: transparent; border: none; box-shadow: none; color: #ffffff; padding: 0.9rem 1.7rem 0.9rem 0.85rem; font-size: 0.82rem; font-family: inherit; font-weight: 500; cursor: pointer; outline: none; }
-.phone-input-group .phone-country-select:focus { border: none; box-shadow: none; }
+.phone-country-picker { position: relative; display: flex; align-items: center; justify-content: space-between; flex: 0 0 88px; width: 88px; min-width: 88px; max-width: 88px; padding: 0 0.55rem 0 0.75rem; border-right: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.05); cursor: pointer; user-select: none; }
+.phone-country-display { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.84rem; font-weight: 500; color: #ffffff; pointer-events: none; white-space: nowrap; overflow: hidden; }
+.phone-country-flag { font-size: 0.95rem; line-height: 1; display: inline-block; }
+.phone-country-dial { color: #ffffff; font-size: 0.84rem; font-weight: 600; }
+.phone-country-chevron { color: #8e8a9c; pointer-events: none; flex-shrink: 0; }
+.phone-input-group .phone-country-select { position: absolute; inset: 0; width: 100% !important; height: 100% !important; opacity: 0; cursor: pointer; z-index: 2; margin: 0; padding: 0; border: none; background: transparent; outline: none; }
 .phone-country-select option { background: #131318; color: #ffffff; }
-.phone-country-chevron { position: absolute; right: 0.45rem; pointer-events: none; color: #9490a0; }
-.phone-input-group .phone-text-input { flex: 1; min-width: 0; width: 100%; background: transparent !important; border: none !important; box-shadow: none !important; border-radius: 0 !important; color: #ffffff !important; padding: 0.9rem 1rem !important; font-size: 0.88rem !important; outline: none !important; }
+.phone-input-group .phone-text-input { flex: 1 1 auto; min-width: 0; width: 100% !important; background: transparent !important; border: none !important; box-shadow: none !important; border-radius: 0 !important; color: #ffffff !important; padding: 0.75rem 0.95rem !important; font-size: 0.88rem !important; outline: none !important; }
 .phone-input-group .phone-text-input:focus { border: none !important; box-shadow: none !important; }
 .phone-input-error { font-size: 0.68rem; color: #ff9fae; letter-spacing: normal; text-transform: none; margin-top: 0.15rem; }
+
+/* Browser autofill reset for dark theme */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #121118 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
 .form-message { grid-column: 1 / -1; display: flex; align-items: center; gap: .5rem; margin: 0; color: #d4c4f8; font-size: .8rem; line-height: 1.5; }
 .form-message.error { color: #ff9fae; }
 .form-message.success { color: #86efac; }
