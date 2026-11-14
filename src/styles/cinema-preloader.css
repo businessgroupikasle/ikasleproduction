@@ -1,5 +1,5 @@
 /* ==========================================================================
-   IKASLÉ PRODUCTIONS — MASTER CINEMA CAMERA & LENS CALIBRATION PRELOADER
+   IKASLÉ PRODUCTIONS — VISUAL CINEMA CAMERA & LENS PRELOADER (NO TEXT)
    ========================================================================== */
 
 .cinema-preloader-overlay {
@@ -8,17 +8,14 @@
   z-index: 99999;
   background-color: #050409;
   background-image: 
-    radial-gradient(circle at 50% 48%, rgba(147, 51, 234, 0.18) 0%, rgba(15, 12, 24, 0.95) 55%),
-    linear-gradient(180deg, rgba(3, 2, 6, 0.95) 0%, rgba(6, 5, 11, 0.98) 100%);
+    radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.22) 0%, rgba(10, 8, 18, 0.96) 55%),
+    linear-gradient(180deg, rgba(2, 1, 5, 0.98) 0%, rgba(5, 4, 10, 0.99) 100%);
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: clamp(1rem, 2.5vw, 2.2rem);
-  color: #ffffff;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
   user-select: none;
-  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
-  perspective: 1200px;
+  cursor: pointer;
 }
 
 /* ==========================================
@@ -27,7 +24,7 @@
 .cine-flash-burst {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 50%, #ffffff 0%, rgba(255, 255, 255, 0.9) 35%, rgba(196, 162, 255, 0.4) 70%, transparent 100%);
+  background: radial-gradient(circle at 50% 50%, #ffffff 0%, rgba(255, 255, 255, 0.92) 30%, rgba(196, 162, 255, 0.5) 65%, transparent 100%);
   opacity: 0;
   pointer-events: none;
   z-index: 100;
@@ -35,67 +32,14 @@
 }
 
 .cine-flash-burst.active {
-  opacity: 0.92;
-  animation: cineFlashFade 0.35s ease-out forwards;
+  opacity: 0.95;
+  animation: cineFlashBurstAnim 0.35s ease-out forwards;
 }
 
-@keyframes cineFlashFade {
+@keyframes cineFlashBurstAnim {
   0% { opacity: 0.95; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.05); }
-  100% { opacity: 0; transform: scale(1.1); }
-}
-
-/* ==========================================
-   35mm Celluloid Filmstrip & Sprockets
-   ========================================== */
-.cine-filmstrip {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 22px;
-  background: rgba(0, 0, 0, 0.7);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 1.5rem;
-  z-index: 3;
-  pointer-events: none;
-}
-
-.cine-filmstrip.top {
-  top: 0;
-}
-
-.cine-filmstrip.bottom {
-  bottom: 0;
-}
-
-.cine-sprocket-row {
-  display: flex;
-  gap: clamp(18px, 4.5vw, 36px);
-  align-items: center;
-}
-
-.cine-sprocket-hole {
-  width: 9px;
-  height: 12px;
-  border-radius: 2px;
-  background: #020104;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.9);
-}
-
-.cine-film-edge-code {
-  display: flex;
-  gap: 1.5rem;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.58rem;
-  letter-spacing: 0.16em;
-  color: #eab308;
-  opacity: 0.65;
-  text-shadow: 0 0 4px rgba(234, 179, 8, 0.4);
+  50% { opacity: 0.7; transform: scale(1.04); }
+  100% { opacity: 0; transform: scale(1.08); }
 }
 
 /* ==========================================
@@ -103,398 +47,216 @@
    ========================================== */
 .cine-anamorphic-flare {
   position: absolute;
-  top: 48%;
+  top: 50%;
   left: 0;
   right: 0;
   height: 2px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(56, 189, 248, 0.2) 20%,
-    rgba(192, 132, 252, 0.9) 50%,
-    rgba(56, 189, 248, 0.2) 80%,
+    rgba(56, 189, 248, 0.15) 20%,
+    rgba(192, 132, 252, 0.85) 50%,
+    rgba(56, 189, 248, 0.15) 80%,
     transparent 100%
   );
   box-shadow: 
-    0 0 50px 10px rgba(168, 85, 247, 0.45),
-    0 0 120px 30px rgba(56, 189, 248, 0.25);
+    0 0 55px 12px rgba(168, 85, 247, 0.45),
+    0 0 130px 35px rgba(56, 189, 248, 0.25);
   pointer-events: none;
-  animation: cineFlareBreathe 3s ease-in-out infinite alternate;
+  animation: cineFlarePulse 3s ease-in-out infinite alternate;
 }
 
 .cine-anamorphic-streak {
   position: absolute;
-  top: 48%;
-  left: 10%;
-  right: 10%;
+  top: 50%;
+  left: 15%;
+  right: 15%;
   height: 1px;
   background: #ffffff;
   box-shadow: 0 0 25px 4px #38bdf8;
-  opacity: 0.7;
+  opacity: 0.65;
   pointer-events: none;
-  animation: cineStreakSweep 2.5s ease-in-out infinite alternate;
+  animation: cineStreakFloat 2.6s ease-in-out infinite alternate;
 }
 
-@keyframes cineFlareBreathe {
-  0% { opacity: 0.5; transform: scaleY(0.7); }
+@keyframes cineFlarePulse {
+  0% { opacity: 0.45; transform: scaleY(0.7); }
   50% { opacity: 1; transform: scaleY(1.3); }
-  100% { opacity: 0.65; transform: scaleY(0.85); }
+  100% { opacity: 0.6; transform: scaleY(0.85); }
 }
 
-@keyframes cineStreakSweep {
-  0% { transform: scaleX(0.85); opacity: 0.4; }
-  100% { transform: scaleX(1.05); opacity: 0.9; }
+@keyframes cineStreakFloat {
+  0% { transform: scaleX(0.8); opacity: 0.35; }
+  100% { transform: scaleX(1.08); opacity: 0.9; }
 }
 
 .cine-grain-mesh {
   position: absolute;
   inset: 0;
   background: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 0);
-  background-size: 20px 20px;
-  opacity: 0.45;
+  background-size: 22px 22px;
+  opacity: 0.4;
   pointer-events: none;
 }
 
 /* ==========================================
-   Viewfinder Reticle, Horizon & Safe Areas
+   Central Visual Container
    ========================================== */
-.cine-viewfinder-grid {
-  position: absolute;
-  inset: clamp(1.8rem, 3.5vw, 3.2rem);
-  pointer-events: none;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  z-index: 2;
-}
-
-.cine-corner {
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  border-color: rgba(196, 162, 255, 0.85);
-  border-style: solid;
-}
-
-.cine-corner.top-left { top: 0; left: 0; border-width: 2.5px 0 0 2.5px; }
-.cine-corner.top-right { top: 0; right: 0; border-width: 2.5px 2.5px 0 0; }
-.cine-corner.bottom-left { bottom: 0; left: 0; border-width: 0 0 2.5px 2.5px; }
-.cine-corner.bottom-right { bottom: 0; right: 0; border-width: 0 2.5px 2.5px 0; }
-
-.cine-safe-area-frame {
-  position: absolute;
-  inset: 8%;
-  border: 1px dashed rgba(255, 255, 255, 0.12);
-  display: flex;
-  justify-content: flex-end;
-  padding: 0.4rem;
-}
-
-.cine-safe-label {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.58rem;
-  color: #64748b;
-  letter-spacing: 0.14em;
-}
-
-/* Center Gyro Horizon */
-.cine-gyro-horizon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  opacity: 0.75;
-}
-
-.cine-gyro-bar {
-  width: 32px;
-  height: 1.5px;
-  background: rgba(56, 189, 248, 0.85);
-  box-shadow: 0 0 6px #38bdf8;
-}
-
-.cine-gyro-circle {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(56, 189, 248, 0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
-}
-
-.cine-gyro-dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #38bdf8;
-}
-
-/* Focus Peaking Green Scan Line */
-.cine-focus-peaking-scan {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 1.5px;
-  background: linear-gradient(90deg, transparent, rgba(74, 222, 128, 0.8), transparent);
-  box-shadow: 0 0 10px #4ade80;
-  animation: cinePeakingSweep 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  opacity: 0.65;
-}
-
-@keyframes cinePeakingSweep {
-  0% { top: 15%; opacity: 0; }
-  25% { opacity: 0.8; }
-  75% { opacity: 0.8; }
-  100% { top: 85%; opacity: 0; }
-}
-
-/* ==========================================
-   Camera HUD Header
-   ========================================== */
-.cine-hud-header {
-  position: relative;
-  z-index: 5;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  font-family: var(--font-mono, 'Courier New', Courier, monospace);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  color: #a49fb2;
-  margin-top: 10px;
-}
-
-.cine-hud-left {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.cine-rec-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #ef4444;
-  box-shadow: 0 0 12px #ef4444;
-  animation: cineRecFlash 0.85s infinite alternate;
-}
-
-@keyframes cineRecFlash {
-  0% { opacity: 0.25; transform: scale(0.9); }
-  100% { opacity: 1; transform: scale(1.15); }
-}
-
-.cine-rec-label {
-  color: #ef4444;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-}
-
-.cine-fps-pill {
-  background: rgba(34, 197, 94, 0.12);
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  color: #4ade80;
-  padding: 0.18rem 0.45rem;
-  border-radius: 4px;
-  font-size: 0.64rem;
-  font-weight: 600;
-}
-
-.cine-hud-sep {
-  opacity: 0.35;
-}
-
-.cine-hud-mono {
-  color: #ffffff;
-  font-weight: 600;
-}
-
-.cine-hud-center {
-  display: flex;
-  gap: 0.65rem;
-}
-
-.cine-hud-tag {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 0.22rem 0.55rem;
-  border-radius: 4px;
-  font-size: 0.66rem;
-  color: #c4a2ff;
-}
-
-.cine-hud-tag.accent {
-  background: rgba(168, 85, 247, 0.15);
-  border-color: rgba(168, 85, 247, 0.4);
-  color: #e9d5ff;
-}
-
-.cine-timecode {
-  color: #c4a2ff;
-  font-weight: 800;
-  font-size: 0.86rem;
-  letter-spacing: 0.14em;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 0.25rem 0.6rem;
-  border-radius: 5px;
-  border: 1px solid rgba(196, 162, 255, 0.25);
-  box-shadow: 0 0 12px rgba(139, 92, 246, 0.2);
-}
-
-/* ==========================================
-   Central 3D Interactive Camera Rig & Lens
-   ========================================== */
-.cine-rig-stage {
+.cine-visual-container {
   position: relative;
   z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(1rem, 2.8vh, 1.8rem);
+  gap: clamp(1.8rem, 4vh, 2.8rem);
   text-align: center;
-  transform-style: preserve-3d;
-  will-change: transform;
 }
 
-/* Cinema Matte Box French Flags */
-.cine-matte-box-frame {
-  position: absolute;
-  inset: -25px;
-  pointer-events: none;
-  opacity: 0.35;
-}
-
-.cine-flag-top {
-  position: absolute;
-  top: 0;
-  left: 20%;
-  right: 20%;
-  height: 6px;
-  background: #1e1b29;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 2px;
-}
-
-/* Master Cine Lens Assembly Barrel */
-.cine-lens-barrel-assembly {
+/* ==========================================
+   Brand Logo
+   ========================================== */
+.cine-logo-wrapper {
   position: relative;
-  width: clamp(170px, 32vw, 225px);
-  height: clamp(170px, 32vw, 225px);
-  border-radius: 50%;
-  background: radial-gradient(circle at 45% 38%, #262138 0%, #110e1c 65%, #07050d 100%);
-  border: 3px solid rgba(196, 162, 255, 0.4);
-  box-shadow: 
-    0 0 45px rgba(139, 92, 246, 0.35),
-    inset 0 0 35px rgba(0, 0, 0, 0.95),
-    inset 0 0 0 7px #171322,
-    inset 0 0 0 11px rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: rotateX(var(--lens-tilt-x, 0deg)) rotateY(var(--lens-tilt-y, 0deg));
-  transition: transform 0.12s ease-out;
-  animation: cineBarrelFloat 4s ease-in-out infinite alternate;
 }
 
-@keyframes cineBarrelFloat {
-  0% { filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.8)); }
-  100% { filter: drop-shadow(0 25px 35px rgba(124, 58, 237, 0.3)); }
-}
-
-/* Outer Geared Follow-Focus Teeth Ring */
-.cine-geared-ring {
+.cine-logo-glow {
   position: absolute;
-  inset: -10px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.6) 0%, transparent 70%);
+  filter: blur(16px);
+  animation: cineLogoGlowPulse 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes cineLogoGlowPulse {
+  0% { transform: scale(0.85); opacity: 0.5; }
+  100% { transform: scale(1.25); opacity: 0.95; }
+}
+
+.cine-brand-logo {
+  position: relative;
+  z-index: 2;
+  width: clamp(56px, 12vw, 68px);
+  height: clamp(56px, 12vw, 68px);
+  border-radius: 18px;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.8),
+    0 0 25px rgba(139, 92, 246, 0.6);
+  animation: cineLogoFloat 3s ease-in-out infinite alternate;
+}
+
+@keyframes cineLogoFloat {
+  0% { transform: translateY(0px) scale(0.98); }
+  100% { transform: translateY(-4px) scale(1.02); }
+}
+
+/* ==========================================
+   Camera Lens Portal Assembly
+   ========================================== */
+.cine-lens-portal {
+  position: relative;
+  width: clamp(170px, 34vw, 220px);
+  height: clamp(170px, 34vw, 220px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Outer Geared Focus Notch Ring */
+.cine-lens-gear-orbit {
+  position: absolute;
+  inset: -12px;
   border-radius: 50%;
   pointer-events: none;
-  animation: cineGearRotate 12s linear infinite;
+  animation: cineGearSpin 14s linear infinite;
 }
 
-@keyframes cineGearRotate {
+@keyframes cineGearSpin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-.cine-gear-tooth {
+.cine-gear-notch {
   position: absolute;
   top: 0;
   left: 50%;
-  width: 3.5px;
+  width: 3px;
   height: 8px;
-  background: rgba(255, 255, 255, 0.22);
-  transform-origin: 50% clamp(95px, 17.5vw, 122px);
+  background: rgba(255, 255, 255, 0.25);
+  transform-origin: 50% clamp(97px, 17vw, 122px);
   border-radius: 1px;
 }
 
-/* Metric Distance Scale */
-.cine-distance-scale {
-  position: absolute;
-  inset: 8px;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.cine-distance-mark {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform-origin: 50% clamp(77px, 14.5vw, 104px);
-  font-family: var(--font-mono, monospace);
-  font-size: 0.52rem;
-  color: #64748b;
-  letter-spacing: 0.05em;
-  transition: color 0.3s;
-}
-
-.cine-distance-mark.is-active {
-  color: #38bdf8;
-  font-weight: 700;
-  text-shadow: 0 0 6px #38bdf8;
-}
-
-/* Multi-Coating Optical Glass Chamber */
-.cine-lens-glass-chamber {
+/* Glowing Lens Frame & Photo */
+.cine-lens-frame {
   position: relative;
-  width: 78%;
-  height: 78%;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
-  background: radial-gradient(circle at 45% 42%, rgba(56, 189, 248, 0.2) 0%, rgba(30, 20, 50, 0.85) 60%, #080611 100%);
-  border: 1.5px solid rgba(168, 85, 247, 0.5);
+  background: radial-gradient(circle at 45% 40%, #1f1a2e 0%, #0c0915 70%, #040308 100%);
+  border: 3px solid rgba(196, 162, 255, 0.45);
   box-shadow: 
-    inset 0 0 30px rgba(124, 58, 237, 0.4),
-    inset 0 0 10px rgba(56, 189, 248, 0.3);
+    0 0 45px rgba(139, 92, 246, 0.4),
+    inset 0 0 35px rgba(0, 0, 0, 0.95),
+    inset 0 0 0 6px #151122,
+    inset 0 0 0 10px rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  animation: cineLensBreathe 3.5s ease-in-out infinite alternate;
 }
 
-/* Emerald & Magenta Multi-Coating Glare Sheen */
+@keyframes cineLensBreathe {
+  0% { transform: scale(0.97); }
+  100% { transform: scale(1.02); }
+}
+
+/* High-Res Camera Lens Optics Image */
+.cine-lens-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.15) brightness(0.85);
+  opacity: 0.88;
+  mix-blend-mode: luminosity;
+  animation: cineLensZoom 4s ease-in-out infinite alternate;
+}
+
+@keyframes cineLensZoom {
+  0% { transform: scale(1) rotate(0deg); }
+  100% { transform: scale(1.08) rotate(2deg); }
+}
+
+/* Glass Reflections & Lens Coatings */
 .cine-coating-emerald {
   position: absolute;
-  top: 8%;
-  left: 8%;
+  top: 6%;
+  left: 6%;
   width: 55%;
   height: 55%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
   filter: blur(8px);
   pointer-events: none;
 }
 
 .cine-coating-magenta {
   position: absolute;
-  bottom: 10%;
-  right: 10%;
+  bottom: 8%;
+  right: 8%;
   width: 60%;
   height: 60%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(236, 72, 153, 0.22) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.28) 0%, transparent 70%);
   filter: blur(10px);
   pointer-events: none;
 }
@@ -506,356 +268,104 @@
   width: 48%;
   height: 32%;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 80%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, transparent 80%);
   transform: rotate(-35deg);
   pointer-events: none;
 }
 
-/* Dynamic Anamorphic Flare Beam */
 .cine-lens-flare-beam {
   position: absolute;
-  width: 150%;
+  width: 160%;
   height: 3px;
   background: linear-gradient(90deg, transparent, #38bdf8, #c084fc, #ec4899, transparent);
   box-shadow: 0 0 18px #a855f7;
   transform: rotate(-15deg);
-  opacity: 0.8;
+  opacity: 0.85;
   pointer-events: none;
 }
 
-/* 10 Precision Aperture Blades (SVG Geometric Iris) */
-.cine-iris-svg {
+/* Rotating Mechanical Iris Rings SVG */
+.cine-iris-ring-svg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  animation: cineIrisRotate 8s linear infinite;
+  pointer-events: none;
 }
 
-.cine-iris-svg.phase-initializing {
-  transform: rotate(0deg) scale(1);
+@keyframes cineIrisRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-.cine-iris-svg.phase-focusing {
-  transform: rotate(38deg) scale(1.08);
-  animation: cineIrisPulse 1.2s ease-in-out infinite alternate;
-}
-
-.cine-iris-svg.phase-locking {
-  transform: rotate(72deg) scale(0.98);
-}
-
-.cine-iris-svg.phase-ready {
-  transform: rotate(108deg) scale(1.15);
-}
-
-@keyframes cineIrisPulse {
-  0% { transform: rotate(30deg) scale(1.02); }
-  100% { transform: rotate(50deg) scale(1.12); }
-}
-
-.cine-camera-core-hub {
+/* Center Aperture Core with Camera Icon */
+.cine-lens-aperture-core {
   position: relative;
-  z-index: 4;
-  width: 42px;
-  height: 42px;
+  z-index: 5;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  background: radial-gradient(circle, #2e2645 0%, #100c1e 90%);
-  border: 1.5px solid rgba(196, 162, 255, 0.7);
+  background: radial-gradient(circle, #2b2242 0%, #100b1e 85%, #05030a 100%);
+  border: 1.5px solid rgba(196, 162, 255, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 18px rgba(168, 85, 247, 0.6);
+  box-shadow: 
+    0 0 20px rgba(168, 85, 247, 0.65),
+    inset 0 0 12px rgba(0, 0, 0, 0.9);
 }
 
-.cine-cam-vector {
-  width: 20px;
-  height: 20px;
+.cine-core-camera-icon {
+  width: 22px;
+  height: 22px;
   color: #c4a2ff;
-  filter: drop-shadow(0 0 5px #a855f7);
-  animation: cineCamBeat 1.8s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 6px #a855f7);
+  animation: cineCamHeartbeat 1.8s ease-in-out infinite alternate;
 }
 
-@keyframes cineCamBeat {
-  0% { transform: scale(0.92); opacity: 0.85; }
-  100% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 8px #c084fc); }
+@keyframes cineCamHeartbeat {
+  0% { transform: scale(0.9); opacity: 0.85; }
+  100% { transform: scale(1.12); opacity: 1; filter: drop-shadow(0 0 10px #c084fc); }
 }
 
-/* Lens Engravings */
-.cine-lens-engraving {
+/* Pulsing Outer Focus Ring */
+.cine-focus-orbit-pulse {
   position: absolute;
-  bottom: -36px;
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
-  color: #948ea4;
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
+  inset: -18px;
+  border-radius: 50%;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.2);
+  animation: cineOrbitPulse 2.4s ease-out infinite;
+  pointer-events: none;
 }
 
-.cine-lens-engraving .brand {
-  color: #ffffff;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-}
-
-.cine-lens-engraving .spec {
-  color: #c4a2ff;
-}
-
-.cine-lens-engraving .serial {
-  font-size: 0.52rem;
-  color: #64748b;
+@keyframes cineOrbitPulse {
+  0% { transform: scale(0.94); opacity: 0.8; }
+  100% { transform: scale(1.14); opacity: 0; }
 }
 
 /* ==========================================
-   Live Telemetry Diagnostics HUD
+   Minimalist Progress Rail (Zero Text)
    ========================================== */
-.cine-telemetry-hud {
-  display: flex;
-  gap: 0.85rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 1.8rem;
-}
-
-.cine-hud-metric-pill {
-  background: rgba(18, 14, 28, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 0.35rem 0.8rem;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15rem;
-  font-family: var(--font-mono, monospace);
-}
-
-.cine-hud-metric-pill .label {
-  font-size: 0.55rem;
-  letter-spacing: 0.12em;
-  color: #716c80;
-}
-
-.cine-hud-metric-pill .value {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #ffffff;
-}
-
-.cine-hud-metric-pill .value.neon-purple {
-  color: #c084fc;
-  text-shadow: 0 0 8px rgba(192, 132, 252, 0.5);
-}
-
-.cine-hud-metric-pill .value.neon-cyan {
-  color: #38bdf8;
-  text-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
-}
-
-/* ==========================================
-   Brand & Progress Status Block
-   ========================================== */
-.cine-status-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.65rem;
+.cine-progress-wrapper {
+  width: clamp(140px, 28vw, 190px);
   margin-top: 0.4rem;
 }
 
-.cine-brand-title {
-  margin: 0;
-  font-size: clamp(1.4rem, 3.2vw, 2.1rem);
-  font-weight: 800;
-  letter-spacing: 0.22em;
-  color: #ffffff;
-  text-transform: uppercase;
-}
-
-.cine-brand-title span {
-  font-weight: 300;
-  color: #c4a2ff;
-  letter-spacing: 0.28em;
-}
-
-.cine-phase-row {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  color: #d1c9e8;
-}
-
-.cine-pulse-indicator {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #a855f7;
-  box-shadow: 0 0 8px #a855f7;
-  animation: cineRecFlash 0.6s infinite alternate;
-}
-
-.cine-pulse-indicator.focusing {
-  background: #38bdf8;
-  box-shadow: 0 0 10px #38bdf8;
-}
-
-.cine-pulse-indicator.locking {
-  background: #e879f9;
-  box-shadow: 0 0 12px #e879f9;
-}
-
-.cine-pulse-indicator.ready {
-  background: #22c55e;
-  box-shadow: 0 0 14px #22c55e;
-}
-
-/* Precision Progress Bar */
-.cine-progress-container {
-  width: clamp(250px, 46vw, 360px);
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  margin-top: 0.3rem;
-}
-
-.cine-progress-track {
-  height: 4px;
+.cine-progress-rail {
+  height: 3px;
   width: 100%;
   background: rgba(255, 255, 255, 0.08);
-  border-radius: 4px;
+  border-radius: 3px;
   overflow: hidden;
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
 
-.cine-progress-bar {
+.cine-progress-fill {
   height: 100%;
   background: linear-gradient(90deg, #38bdf8, #a855f7, #ec4899);
-  box-shadow: 0 0 14px rgba(168, 85, 247, 0.9);
-  border-radius: 4px;
-}
-
-.cine-progress-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.66rem;
-  letter-spacing: 0.1em;
-  color: #8c869c;
-}
-
-.cine-percent {
-  color: #c4a2ff;
-  font-weight: 700;
-  font-size: 0.78rem;
-}
-
-/* ==========================================
-   HUD Footer Controls & Sound Toggle
-   ========================================== */
-.cine-hud-footer {
-  position: relative;
-  z-index: 5;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-  color: #797387;
-  margin-bottom: 8px;
-}
-
-.cine-tech-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-}
-
-.cine-sound-toggle {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #d1c9e8;
-  font-family: inherit;
-  font-size: 0.64rem;
-  padding: 0.3rem 0.65rem;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  transition: all 0.2s ease;
-}
-
-.cine-sound-toggle .dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #64748b;
-}
-
-.cine-sound-toggle.is-active {
-  border-color: rgba(168, 85, 247, 0.5);
-  background: rgba(168, 85, 247, 0.12);
-  color: #ffffff;
-}
-
-.cine-sound-toggle.is-active .dot {
-  background: #a855f7;
-  box-shadow: 0 0 6px #a855f7;
-}
-
-.cine-tech-meta .sep {
-  color: #a855f7;
-}
-
-.cine-skip-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #c4a2ff;
-  font-family: inherit;
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  padding: 0.42rem 0.95rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.cine-skip-btn:hover {
-  background: rgba(168, 85, 247, 0.2);
-  border-color: #a855f7;
-  color: #ffffff;
-  box-shadow: 0 0 12px rgba(168, 85, 247, 0.3);
-}
-
-@media (max-width: 768px) {
-  .cine-hud-center {
-    display: none;
-  }
-  .cine-telemetry-hud .cine-hud-metric-pill:last-child {
-    display: none;
-  }
-  .cine-tech-meta span:nth-child(3),
-  .cine-tech-meta span:nth-child(4),
-  .cine-tech-meta span:nth-child(5) {
-    display: none;
-  }
-  .cine-film-edge-code span:nth-child(2),
-  .cine-film-edge-code span:nth-child(3) {
-    display: none;
-  }
-  .cinema-preloader-overlay {
-    padding: 0.8rem;
-  }
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.95);
+  border-radius: 3px;
 }

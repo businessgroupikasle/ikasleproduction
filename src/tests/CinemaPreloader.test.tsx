@@ -3,40 +3,33 @@ import { describe, expect, it, vi } from 'vitest'
 import { CinemaPreloader } from '../components/ui/CinemaPreloader'
 
 describe('CinemaPreloader Component', () => {
-  it('renders the creative camera, lens barrel, and telemetry HUD', () => {
+  it('renders the brand logo and camera lens image without text clutter', () => {
     const handleComplete = vi.fn()
-    render(<CinemaPreloader duration={3000} onComplete={handleComplete} />)
+    const { container } = render(<CinemaPreloader duration={3000} onComplete={handleComplete} />)
 
     // Check preloader role
-    expect(screen.getByRole('progressbar', { name: /Camera and lens calibration/i })).toBeInTheDocument()
+    expect(screen.getByRole('progressbar', { name: /Loading animation/i })).toBeInTheDocument()
 
-    // Check camera HUD & Lens branding
-    expect(screen.getByText(/IKASLÉ CINE-CAM/i)).toBeInTheDocument()
-    expect(screen.getByText(/IKASLÉ CINE-PRIME 35mm/i)).toBeInTheDocument()
-    expect(screen.getByText(/T1.5 • ANAMORPHIC 2.39:1/i)).toBeInTheDocument()
-    expect(screen.getByText(/INITIALIZING HIGH-RES SENSORS/i)).toBeInTheDocument()
-    expect(screen.getByText(/00:00:00:00/i)).toBeInTheDocument()
-    expect(screen.getByText(/IRIS STOP/i)).toBeInTheDocument()
-    expect(screen.getByText(/FOCUS DIST/i)).toBeInTheDocument()
+    // Check IKASLÉ brand logo is rendered
+    const logo = screen.getByAltText('IKASLÉ')
+    expect(logo).toBeInTheDocument()
+    expect(logo).toHaveAttribute('src', '/assets/brand/ikasle-mark.svg')
+
+    // Check Camera Lens image is rendered
+    const lensImg = screen.getByAltText('Camera Lens')
+    expect(lensImg).toBeInTheDocument()
+    expect(lensImg).toHaveAttribute('src', '/assets/services/camera-lens.jpg')
+
+    // Verify absolutely NO text content in the preloader
+    expect(container.textContent?.trim()).toBe('')
   })
 
-  it('allows user to toggle sound effects', () => {
-    render(<CinemaPreloader duration={3000} />)
-    const soundBtn = screen.getByRole('button', { name: /Toggle camera sound effects/i })
-    expect(soundBtn).toHaveTextContent(/SOUND: ON/i)
-
-    fireEvent.click(soundBtn)
-    expect(soundBtn).toHaveTextContent(/SOUND: MUTED/i)
-  })
-
-  it('allows user to skip the 3-second loader immediately', () => {
+  it('allows user to dismiss on click', () => {
     const handleComplete = vi.fn()
     render(<CinemaPreloader duration={3000} onComplete={handleComplete} />)
 
-    const skipBtn = screen.getByRole('button', { name: /Skip camera loading animation/i })
-    expect(skipBtn).toBeInTheDocument()
-
-    fireEvent.click(skipBtn)
+    const overlay = screen.getByRole('progressbar', { name: /Loading animation/i })
+    fireEvent.click(overlay)
     expect(handleComplete).toHaveBeenCalledTimes(1)
   })
 })
