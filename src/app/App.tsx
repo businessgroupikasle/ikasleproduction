@@ -1,7 +1,8 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { motion } from 'motion/react'
 import { Layout } from '../components/layout/Layout'
+import CinemaPreloader from '../components/ui/CinemaPreloader'
 
 const Home = lazy(() => import('../pages/Home'))
 const About = lazy(() => import('../pages/About'))
@@ -14,9 +15,17 @@ const Legal = lazy(() => import('../pages/Legal'))
 const NotFound = lazy(() => import('../pages/NotFound'))
 
 export default function App() {
+  const [showIntro, setShowIntro] = useState(() => {
+    if (import.meta.env?.MODE === 'test') {
+      return false
+    }
+    return true
+  })
+
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.24 }}>
-      <Suspense fallback={<div className="page-loader">IKASLÉ</div>}>
+      {showIntro && <CinemaPreloader duration={3000} onComplete={() => setShowIntro(false)} />}
+      <Suspense fallback={<CinemaPreloader duration={3000} />}>
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
