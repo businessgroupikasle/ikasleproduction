@@ -5,7 +5,7 @@ import { CinemaPreloader } from '../components/ui/CinemaPreloader'
 describe('CinemaPreloader Component', () => {
   it('renders the brand logo and camera lens image without text clutter', () => {
     const handleComplete = vi.fn()
-    const { container } = render(<CinemaPreloader duration={3000} onComplete={handleComplete} />)
+    const { container } = render(<CinemaPreloader duration={2000} onComplete={handleComplete} />)
 
     // Check preloader role
     expect(screen.getByRole('progressbar', { name: /Loading animation/i })).toBeInTheDocument()
@@ -26,7 +26,7 @@ describe('CinemaPreloader Component', () => {
 
   it('allows user to dismiss on click', () => {
     const handleComplete = vi.fn()
-    render(<CinemaPreloader duration={3000} onComplete={handleComplete} />)
+    render(<CinemaPreloader duration={2000} onComplete={handleComplete} />)
 
     const overlay = screen.getByRole('progressbar', { name: /Loading animation/i })
     fireEvent.click(overlay)

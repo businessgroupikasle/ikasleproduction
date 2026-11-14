@@ -9,7 +9,7 @@ interface CinemaPreloaderProps {
   onComplete?: () => void
 }
 
-export function CinemaPreloader({ duration = 3000, onComplete }: CinemaPreloaderProps) {
+export function CinemaPreloader({ duration = 2000, onComplete }: CinemaPreloaderProps) {
   const [progress, setProgress] = useState(0)
   const [flashActive, setFlashActive] = useState(false)
   const [isVisible, setIsVisible] = useState(true)

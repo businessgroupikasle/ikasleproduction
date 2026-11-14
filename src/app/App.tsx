@@ -24,8 +24,8 @@ export default function App() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.24 }}>
-      {showIntro && <CinemaPreloader duration={3000} onComplete={() => setShowIntro(false)} />}
-      <Suspense fallback={<CinemaPreloader duration={3000} />}>
+      {showIntro && <CinemaPreloader duration={2000} onComplete={() => setShowIntro(false)} />}
+      <Suspense fallback={<CinemaPreloader duration={2000} />}>
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
