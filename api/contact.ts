@@ -83,7 +83,9 @@ export async function sendBriefEmails(
   const message = getString(rawPayload.message)
   const referenceId = getString(rawPayload.referenceId) || `IKL-2026-${Math.floor(1000 + Math.random() * 9000)}`
 
-  if (!name || name.length < 2 || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !phone || phone.length < 7 || !message || message.length < 10) {
+  const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/
+
+  if (!name || name.length < 2 || !email || !EMAIL_PATTERN.test(email) || !phone || phone.length < 7 || !message || message.length < 10) {
     return {
       statusCode: 400,
       body: {

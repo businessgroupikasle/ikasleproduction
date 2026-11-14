@@ -93,7 +93,7 @@ export default function Services() {
   return (
     <div ref={pageRef} className="page services-page">
       <header className="page-hero">
-        <LensArt />
+        <LensArt image="/assets/services/camera-lens.jpg" />
         <p className="eyebrow section-eyebrow" data-reveal>
           SERVICES / WHAT WE MAKE
         </p>
@@ -272,7 +272,38 @@ export default function Services() {
 
       <Marquee className="fx-band" items={SERVICES_TICKER} duration={48} reverse />
 
-      <SectionDivider label="02 / START A PRODUCTION" />
+      <SectionDivider label="02 / PRODUCTION RIG" />
+      <section className="services-camera-section" aria-label="Studio cinema camera rig" data-reveal>
+        <div className="services-camera-card glass">
+          <div className="services-camera-media" aria-hidden="true">
+            <img
+              src="/assets/camera/cinema-camera-placeholder.png"
+              alt=""
+              className="services-camera-img"
+              loading="lazy"
+              decoding="async"
+              draggable={false}
+            />
+            <div className="services-camera-fade" />
+          </div>
+          <div className="services-camera-copy">
+            <p className="eyebrow">CINEMA GRADE WORKFLOW · COIMBATORE</p>
+            <h2>
+              BUILT FOR SET <span className="accent">&amp; STUDIO.</span>
+            </h2>
+            <p>
+              Every production runs on cinema-grade bodies, prime optics, controlled lighting, and calibrated monitoring—engineered to move cleanly from studio stages to on-location shoots across South India.
+            </p>
+            <div className="services-camera-specs">
+              <span>4K DCI / RAW</span>
+              <span>50MM CINE PRIME</span>
+              <span>ON-SET COLOUR MONITOR</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider label="03 / START A PRODUCTION" />
       <PageCTA
         eyebrow="READY WHEN YOU ARE"
         description="Connect with our Coimbatore production desk. Tell us what you want to make and who it needs to move. We will shape the right production around it."

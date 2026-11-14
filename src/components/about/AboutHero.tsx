@@ -3,6 +3,7 @@ import { Aperture, Focus } from 'lucide-react'
 import gsap from 'gsap'
 import { ABOUT_FRAMES, aboutHero } from '../../data/about'
 import { useFitText } from '../../hooks/useFitText'
+import { LensArt } from '../fx/LensArt'
 import { Timecode } from '../page/Timecode'
 
 /** How long each frame holds before the focus is pulled to the next one. */
@@ -54,6 +55,7 @@ export function AboutHero() {
 
   return (
     <section ref={containerRef} className="svc-hero-section" aria-labelledby="svc-hero-heading">
+      <LensArt image="/assets/services/camera-lens.jpg" className="fx-lens-soft fx-lens-ambient" />
       <div className="svc-hero-grid">
         <div className="svc-hero-content">
           <div className="svc-pill-badge">

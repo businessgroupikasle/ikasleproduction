@@ -39,7 +39,7 @@ export function Footer() {
                 <MapPin size={15} className="footer-meta-icon" aria-hidden="true" />
                 <div>
                   <span className="footer-meta-label">STUDIO BASE</span>
-                  <strong className="footer-meta-value">Coimbatore, Tamil Nadu</strong>
+                  <strong className="footer-meta-value">1639/ A, 2nd Floor, Hopes, Coimbatore, India- 641004</strong>
                   <small className="footer-meta-hint">Deployable across South India & worldwide</small>
                 </div>
               </div>
@@ -64,6 +64,10 @@ export function Footer() {
               </Link>
               <Link to="/contact" className="footer-nav-link">
                 <span>Contact</span>
+                <ArrowUpRight size={13} className="footer-nav-arrow" aria-hidden="true" />
+              </Link>
+              <Link to="/contact#faq" className="footer-nav-link">
+                <span>FAQ</span>
                 <ArrowUpRight size={13} className="footer-nav-arrow" aria-hidden="true" />
               </Link>
             </nav>
@@ -109,7 +113,7 @@ export function Footer() {
               <span className="footer-socials-label">COMMUNITY & FEEDS</span>
               <div className="footer-social-chips">
                 <a
-                  href="https://instagram.com"
+                  href="https://www.instagram.com/ikasleproductions"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="footer-social-chip"
@@ -118,7 +122,7 @@ export function Footer() {
                   <ArrowUpRight size={12} aria-hidden="true" />
                 </a>
                 <a
-                  href="https://youtube.com"
+                  href="https://www.youtube.com/@ikasleproductions"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="footer-social-chip"
@@ -127,7 +131,7 @@ export function Footer() {
                   <ArrowUpRight size={12} aria-hidden="true" />
                 </a>
                 <a
-                  href="https://vimeo.com"
+                  href="https://vimeo.com/ikasleproductions"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="footer-social-chip"
@@ -136,7 +140,7 @@ export function Footer() {
                   <ArrowUpRight size={12} aria-hidden="true" />
                 </a>
                 <a
-                  href="https://wa.me/917845132962"
+                  href="https://wa.me/917845132962?text=Hi%20IKASL%C3%89%20Productions%2C%20I%20would%20like%20to%20enquire%20about%20a%20production%20project"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="footer-social-chip"
@@ -154,8 +158,6 @@ export function Footer() {
         <div className="footer-bottom footer-bottom-bar">
           <div className="footer-bottom-left">
             <span>© {new Date().getFullYear()} IKASLÉ Productions</span>
-            <span className="footer-bullet">·</span>
-            <span>Designed frame by frame.</span>
           </div>
 
           <div className="footer-bottom-center">

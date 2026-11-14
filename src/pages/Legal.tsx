@@ -97,7 +97,7 @@ export default function Legal({ type }: { type: 'privacy' | 'terms' }) {
     // Keyed by type so switching between the two documents replays the reveal.
     <div ref={pageRef} key={type} className="page legal-page">
       <header className="page-hero">
-        <LensArt className="fx-lens-soft" />
+        <LensArt image="/assets/services/camera-lens.jpg" className="fx-lens-soft" />
         <p className="eyebrow section-eyebrow" data-reveal>
           {privacy ? 'LEGAL & COMPLIANCE // PRIVACY NOTICE' : 'LEGAL & COMPLIANCE // TERMS OF SERVICE'}
         </p>
@@ -105,11 +105,14 @@ export default function Legal({ type }: { type: 'privacy' | 'terms' }) {
       </header>
 
       <article className="legal-copy">
-        <p className="legal-notice" data-reveal>
-          {privacy
-            ? 'IKASLÉ Productions operates a registered commercial film and photography studio based in Coimbatore, Tamil Nadu, India. This Privacy Policy outlines our transparent commitment to your data security, client confidentiality, and creative rights.'
-            : 'These Terms & Conditions govern your access to ikasleproductions.com and all creative production contracts, commercial film commissions, and editorial photography engagements with IKASLÉ Productions, Coimbatore, Tamil Nadu, India.'}
-        </p>
+        <div className="legal-notice" data-reveal>
+          <p className="legal-notice-text">
+            {privacy
+              ? 'IKASLÉ Productions operates a registered commercial film and photography studio based in Coimbatore, Tamil Nadu, India. This Privacy Policy outlines our transparent commitment to your data security, client confidentiality, and creative rights.'
+              : 'These Terms & Conditions govern your access to ikasleproductions.com and all creative production contracts, commercial film commissions, and editorial photography engagements with IKASLÉ Productions, Coimbatore, Tamil Nadu, India.'}
+          </p>
+          <span className="legal-notice-badge" aria-label="Official">OFFICIAL</span>
+        </div>
 
         {clauses.map((clause, index) => (
           <section key={clause.title} className="legal-clause" data-reveal style={revealDelay(index > 0 ? 1 : 0)}>

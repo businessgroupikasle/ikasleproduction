@@ -20,6 +20,8 @@ import {
   Volume2,
   X,
 } from 'lucide-react'
+import { createPortal } from 'react-dom'
+import { LensArt } from '../components/fx/LensArt'
 import { Marquee } from '../components/fx/Marquee'
 import { SplitTitle } from '../components/fx/SplitTitle'
 import { SectionDivider } from '../components/page/PageChrome'
@@ -202,6 +204,12 @@ export default function Work() {
           01 / HERO — title card with a contact sheet of the studio's formats
           ===================================================================== */}
       <header className="work-hero" onPointerMove={handleHeroPointerMove} onPointerLeave={handleHeroPointerLeave}>
+        <LensArt
+          image="/assets/camera/cinema-camera-placeholder.png"
+          spin={false}
+          imagePosition="72% 35%"
+          className="fx-lens-soft fx-lens-ambient"
+        />
         <div className="work-hero-grid">
           <div className="work-hero-copy">
             <div className="work-hero-badge-row" data-reveal>
@@ -743,90 +751,92 @@ export default function Work() {
       {/* =====================================================================
           FRAME INSPECTOR MODAL (Full Viewfinder HUD)
           ===================================================================== */}
-      {inspectModalProject && (
-        <div
-          className="work-modal-backdrop"
-          onClick={handleCloseInspect}
-          role="dialog"
-          aria-modal="true"
-          aria-label={`Viewfinder Inspection: ${inspectModalProject.title}`}
-        >
-          <div className="work-modal-frame" onClick={(e) => e.stopPropagation()}>
-            {/* Modal Top Bar */}
-            <div className="work-modal-top">
-              <div className="work-modal-rec">
-                <span className="work-rec-dot" />
-                <span className="work-modal-rec-text">
-                  REC [PAUSED] · {inspectModalProject.timecode}
-                </span>
-              </div>
+      {inspectModalProject &&
+        createPortal(
+          <div
+            className="work-modal-backdrop"
+            onClick={handleCloseInspect}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Viewfinder Inspection: ${inspectModalProject.title}`}
+          >
+            <div className="work-modal-frame" onClick={(e) => e.stopPropagation()}>
+              {/* Modal Top Bar */}
+              <div className="work-modal-top">
+                <div className="work-modal-rec">
+                  <span className="work-rec-dot" />
+                  <span className="work-modal-rec-text">
+                    REC [PAUSED] · {inspectModalProject.timecode}
+                  </span>
+                </div>
 
-              <div className="cine-specs-chips">
-                <span className="cine-spec-chip">ISO {inspectModalProject.hudData.iso}</span>
-                <span className="cine-spec-chip">{inspectModalProject.hudData.shutter}</span>
-                <span className="cine-spec-chip">{inspectModalProject.hudData.wb}</span>
-                <span className="cine-spec-chip">{inspectModalProject.hudData.iris}</span>
-                <span className="cine-spec-chip">{inspectModalProject.hudData.fps}</span>
-              </div>
+                <div className="cine-specs-chips">
+                  <span className="cine-spec-chip">ISO {inspectModalProject.hudData.iso}</span>
+                  <span className="cine-spec-chip">{inspectModalProject.hudData.shutter}</span>
+                  <span className="cine-spec-chip">{inspectModalProject.hudData.wb}</span>
+                  <span className="cine-spec-chip">{inspectModalProject.hudData.iris}</span>
+                  <span className="cine-spec-chip">{inspectModalProject.hudData.fps}</span>
+                </div>
 
-              <button
-                type="button"
-                className="cinema-tool-btn cinema-close-btn"
-                onClick={handleCloseInspect}
-                aria-label="Close viewfinder (Esc)"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Modal Viewport with Live HUD Guides */}
-            <div className="work-modal-viewport">
-              <img
-                src={inspectModalProject.image}
-                alt={inspectModalProject.title}
-                className="work-modal-img"
-              />
-
-              <div className="cine-hud-overlay" aria-hidden="true">
-                <div className="cine-hud-corner tl" />
-                <div className="cine-hud-corner tr" />
-                <div className="cine-hud-corner bl" />
-                <div className="cine-hud-corner br" />
-                <div className="cine-hud-crosshair" />
-                <div className="cine-hud-rule-lines" />
-              </div>
-            </div>
-
-            {/* Modal Bottom Metadata */}
-            <div className="work-modal-bottom">
-              <div className="work-modal-info">
-                <span className="eyebrow work-modal-eyebrow">
-                  {inspectModalProject.category} / {inspectModalProject.aspectRatio}
-                </span>
-                <h3>{inspectModalProject.title}</h3>
-                <p>{inspectModalProject.summary}</p>
-              </div>
-
-              <div className="work-modal-actions">
-                <Link
-                  to={`/work/${inspectModalProject.slug}`}
-                  className="button"
-                  onClick={handleCloseInspect}
-                >
-                  Read Full Case Study <ArrowRight size={15} />
-                </Link>
                 <button
                   type="button"
-                  className="button button-secondary"
+                  className="cinema-tool-btn cinema-close-btn"
                   onClick={handleCloseInspect}
+                  aria-label="Close viewfinder (Esc)"
                 >
-                  Close Viewfinder
+                  <X size={20} />
                 </button>
               </div>
+
+              {/* Modal Viewport with Live HUD Guides */}
+              <div className="work-modal-viewport">
+                <img
+                  src={inspectModalProject.image}
+                  alt={inspectModalProject.title}
+                  className="work-modal-img"
+                />
+
+                <div className="cine-hud-overlay" aria-hidden="true">
+                  <div className="cine-hud-corner tl" />
+                  <div className="cine-hud-corner tr" />
+                  <div className="cine-hud-corner bl" />
+                  <div className="cine-hud-corner br" />
+                  <div className="cine-hud-crosshair" />
+                  <div className="cine-hud-rule-lines" />
+                </div>
+              </div>
+
+              {/* Modal Bottom Metadata */}
+              <div className="work-modal-bottom">
+                <div className="work-modal-info">
+                  <span className="eyebrow work-modal-eyebrow">
+                    {inspectModalProject.category} / {inspectModalProject.aspectRatio}
+                  </span>
+                  <h3>{inspectModalProject.title}</h3>
+                  <p>{inspectModalProject.summary}</p>
+                </div>
+
+                <div className="work-modal-actions">
+                  <Link
+                    to={`/work/${inspectModalProject.slug}`}
+                    className="button"
+                    onClick={handleCloseInspect}
+                  >
+                    Read Full Case Study <ArrowRight size={15} />
+                  </Link>
+                  <button
+                    type="button"
+                    className="button button-secondary"
+                    onClick={handleCloseInspect}
+                  >
+                    Close Viewfinder
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
 
       {/* =====================================================================
           CALL TO ACTION — a clapperboard slate that claps shut as it arrives

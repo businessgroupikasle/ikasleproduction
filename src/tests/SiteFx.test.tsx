@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { Marquee } from '../components/fx/Marquee'
+import { LensArt } from '../components/fx/LensArt'
 import { SiteFx } from '../components/fx/SiteFx'
 import { SplitTitle } from '../components/fx/SplitTitle'
 import { sceneFor } from '../utils/pageScenes'
@@ -79,5 +80,29 @@ describe('Marquee', () => {
     expect(marquee).toHaveClass('is-outline', 'is-reverse')
     expect(container.querySelectorAll('.fx-marquee-group')).toHaveLength(2)
     expect(container.querySelectorAll('.fx-marquee-item')).toHaveLength(6)
+  })
+})
+
+describe('LensArt', () => {
+  it('renders decorative optical rings and supports spinning lens or static camera artwork', () => {
+    const { container, rerender } = render(<LensArt image="/assets/services/camera-lens.jpg" />)
+    const root = container.querySelector('.fx-lens')
+    expect(root).toHaveAttribute('aria-hidden', 'true')
+    const lensImg = container.querySelector('.fx-lens-img')
+    expect(lensImg).toHaveAttribute('src', '/assets/services/camera-lens.jpg')
+    expect(lensImg).not.toHaveClass('is-static')
+
+    rerender(
+      <LensArt
+        image="/assets/camera/cinema-camera-placeholder.png"
+        spin={false}
+        imagePosition="72% 35%"
+        className="fx-lens-ambient"
+      />,
+    )
+    expect(container.querySelector('.fx-lens')).toHaveClass('fx-lens-ambient')
+    const cameraImg = container.querySelector('.fx-lens-img')
+    expect(cameraImg).toHaveClass('is-static')
+    expect(cameraImg).toHaveStyle({ objectPosition: '72% 35%' })
   })
 })

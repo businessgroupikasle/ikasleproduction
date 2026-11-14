@@ -5,7 +5,15 @@ import gsap from 'gsap'
 import type { ServiceDetailConfig, SignatureEffect } from '../../data/serviceDetails'
 import { useFitText } from '../../hooks/useFitText'
 import { FX_DURATION, FX_SOUND } from '../../utils/serviceFx'
+import { LensArt } from '../fx/LensArt'
 import { ServiceFx } from './ServiceFx'
+
+const HERO_LENS_MEDIA: Record<string, { image: string; spin: boolean; position?: string }> = {
+  photography: { image: '/assets/services/camera-lens.jpg', spin: true },
+  'video-production': { image: '/assets/camera/cinema-camera-placeholder.png', spin: false, position: '72% 35%' },
+  'content-creation': { image: '/assets/services/camera-lens.jpg', spin: true },
+  'creative-solutions': { image: '/assets/services/video-production/cine-lens.jpg', spin: false },
+}
 
 export function ServiceHero({ config }: { config: ServiceDetailConfig }) {
   const containerRef = useRef<HTMLElement>(null)
@@ -16,6 +24,7 @@ export function ServiceHero({ config }: { config: ServiceDetailConfig }) {
   const { signature } = config
   const BadgeIcon = config.badgeIcon
   const SignatureIcon = signature.icon
+  const lensMedia = HERO_LENS_MEDIA[config.slug] ?? HERO_LENS_MEDIA.photography
 
   useFitText(headingRef)
 
@@ -51,6 +60,12 @@ export function ServiceHero({ config }: { config: ServiceDetailConfig }) {
 
   return (
     <section ref={containerRef} className="svc-hero-section" aria-labelledby="svc-hero-heading">
+      <LensArt
+        image={lensMedia.image}
+        spin={lensMedia.spin}
+        imagePosition={lensMedia.position}
+        className="fx-lens-soft fx-lens-ambient"
+      />
       {/* Portalled to <body>: the hero is its own stacking context, which would otherwise
           keep the header (and later sections) painting above the full-screen effect. */}
       {fx && createPortal(<ServiceFx key={fx.run} effect={fx.effect} />, document.body)}

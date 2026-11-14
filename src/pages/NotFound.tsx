@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { LensArt } from '../components/fx/LensArt'
 import { SplitTitle } from '../components/fx/SplitTitle'
 import { ButtonLink } from '../components/ui/ButtonLink'
 import { usePageSEO } from '../hooks/usePageMeta'
@@ -13,6 +14,7 @@ export default function NotFound() {
   return (
     <div ref={pageRef} className="not-found">
       {/* A film-leader countdown that loops behind the message. */}
+      <LensArt image="/assets/services/camera-lens.jpg" className="fx-lens-soft fx-lens-ambient" />
       <div className="lost-leader" aria-hidden="true">
         <i className="lost-ring" />
         <i className="lost-ring lost-ring-inner" />

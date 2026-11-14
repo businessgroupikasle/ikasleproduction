@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Play } from 'lucide-react'
 import { ButtonLink } from '../ui/ButtonLink'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -107,9 +106,6 @@ export function Hero() {
         </p>
         <div className="hero-actions">
           <ButtonLink to="/portfolio">Explore portfolio</ButtonLink>
-          <ButtonLink to="#showreel" secondary>
-            <Play size={15} fill="currentColor" /> Watch showreel
-          </ButtonLink>
         </div>
       </div>
     </section>

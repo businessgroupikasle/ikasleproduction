@@ -48,6 +48,8 @@ export interface FlipCardProps {
   shadowColor?: string;
   shadowOpacity?: number;
   disabled?: boolean;
+  focusPoint?: boolean;
+  onHoverStart?: () => void;
   ariaLabel?: string;
   className?: string;
 }
@@ -89,6 +91,8 @@ export default function FlipCard({
   shadowColor = '#8b5cf6',
   shadowOpacity = 0.2,
   disabled = false,
+  focusPoint = false,
+  onHoverStart,
   ariaLabel = 'Flip card',
   className = ''
 }: FlipCardProps) {
@@ -163,6 +167,8 @@ export default function FlipCard({
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (disabled || e.button !== 0 || grip.current) return;
+    const target = e.target as HTMLElement | null;
+    if (target?.closest('a, button, [data-no-flip]')) return;
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
     } catch {
@@ -202,15 +208,17 @@ export default function FlipCard({
       while (g.hist.length > 2 && now - g.hist[0].t > HISTORY_MS) g.hist.shift();
       return;
     }
-    if (!tilt || reduce || disabled || e.pointerType === 'touch') return;
+    if ((!tilt && !focusPoint) || disabled || e.pointerType === 'touch') return;
     const r = e.currentTarget.getBoundingClientRect();
     const px = clamp((e.clientX - r.left) / r.width, 0, 1);
     const py = clamp((e.clientY - r.top) / r.height, 0, 1);
-    tiltX.set((0.5 - py) * 2 * tiltMax);
-    tiltY.set((px - 0.5) * 2 * tiltMax);
     gx.set(px * 100);
     gy.set(py * 100);
     sheen.set(1);
+    if (tilt && !reduce) {
+      tiltX.set((0.5 - py) * 2 * tiltMax);
+      tiltY.set((px - 0.5) * 2 * tiltMax);
+    }
   };
   const release = (e: React.PointerEvent<HTMLDivElement>, cancelled: boolean) => {
     const g = grip.current;
@@ -238,20 +246,38 @@ export default function FlipCard({
     settle(to, velocity, false);
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement | null;
+    if (target?.closest('a, button, [data-no-flip]')) return;
     if (disabled || (e.key !== 'Enter' && e.key !== ' ')) return;
     e.preventDefault();
     if (!e.repeat) flip(true);
   };
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement | null;
+    if (target?.closest('a, button, [data-no-flip]')) return;
     if (!disabled && e.detail === 0) flip(true);
   };
 
   const rotorStyle = {
-    transform: axis === 'x' ? turnX : turnY,
+    ...(reduce ? {} : { transform: axis === 'x' ? turnX : turnY }),
     ['--fc-gx' as string]: gxPct,
     ['--fc-gy' as string]: gyPct,
     ['--fc-sheen' as string]: sheen
   };
+
+  const renderFocusOverlay = () =>
+    focusPoint ? (
+      <span className="flip-card__focus" aria-hidden="true">
+        <span className="flip-card__focus-spot" />
+        <span className="flip-card__focus-reticle">
+          <i />
+          <i />
+          <i />
+          <i />
+          <span className="flip-card__focus-dot" />
+        </span>
+      </span>
+    ) : null;
 
   const widthStyle = typeof width === 'number' ? `${width}px` : width;
   const heightStyle = typeof height === 'number' ? `${height}px` : height;
@@ -269,6 +295,7 @@ export default function FlipCard({
       data-draggable={draggable && !disabled && !reduce ? '' : undefined}
       data-dragging={dragging ? '' : undefined}
       data-disabled={disabled ? '' : undefined}
+      data-focus-point={focusPoint && !disabled ? '' : undefined}
       data-fade={reduce ? (shown ? 'back' : 'front') : undefined}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
@@ -276,7 +303,17 @@ export default function FlipCard({
       onPointerCancel={e => release(e, true)}
       onLostPointerCapture={e => release(e, true)}
       onPointerEnter={e => {
-        if (!reduce && !disabled && e.pointerType !== 'touch') lift.set(hoverScale);
+        if (disabled || e.pointerType === 'touch') return;
+        if (focusPoint || (tilt && !reduce)) {
+          const r = e.currentTarget.getBoundingClientRect();
+          if (r.width > 0 && r.height > 0) {
+            gx.set(clamp((e.clientX - r.left) / r.width, 0, 1) * 100);
+            gy.set(clamp((e.clientY - r.top) / r.height, 0, 1) * 100);
+          }
+          sheen.set(1);
+        }
+        if (!reduce) lift.set(hoverScale);
+        onHoverStart?.();
       }}
       onPointerLeave={() => {
         if (!grip.current) rest();
@@ -304,13 +341,15 @@ export default function FlipCard({
           style={axis === 'x' ? { scaleY: spread, opacity: shade } : { scaleX: spread, opacity: shade }}
         />
       ) : null}
-      <motion.div className="flip-card__rotor" style={reduce ? undefined : rotorStyle}>
+      <motion.div className="flip-card__rotor" style={reduce && !focusPoint ? undefined : rotorStyle}>
         <div className="flip-card__face flip-card__face--front" aria-hidden={shown} inert={shown}>
           {front}
+          {renderFocusOverlay()}
           {glare ? <span className="flip-card__glare" aria-hidden="true" /> : null}
         </div>
         <div className="flip-card__face flip-card__face--back" aria-hidden={!shown} inert={!shown}>
           {back}
+          {renderFocusOverlay()}
           {glare ? <span className="flip-card__glare" aria-hidden="true" /> : null}
         </div>
       </motion.div>

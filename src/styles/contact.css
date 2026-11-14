@@ -433,6 +433,36 @@
   color: #ef4444;
 }
 
+.contact-field-wrap .phone-input-group {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+}
+
+.contact-field-wrap .phone-input-group:focus-within {
+  border-color: #9f75f9;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+}
+
+.contact-field-wrap .phone-input-group.has-error {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15) !important;
+}
+
+.contact-field-wrap .phone-input-group .phone-country-select {
+  padding: 0.75rem 1.6rem 0.75rem 0.75rem;
+  font-size: 0.84rem;
+}
+
+.contact-field-wrap .phone-input-group .phone-text-input {
+  padding: 0.75rem 0.95rem !important;
+  font-size: 0.88rem !important;
+}
+
+.contact-field-wrap .phone-input-error {
+  color: #ef4444;
+}
+
 .contact-submit-error {
   display: flex;
   flex-direction: column;

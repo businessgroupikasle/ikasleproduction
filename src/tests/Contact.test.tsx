@@ -18,7 +18,7 @@ describe('Contact Page Revamp', () => {
     expect(screen.getByRole('heading', { level: 1, name: /let's put your idea/i })).toBeInTheDocument()
     expect(screen.getByText('ikasleproduction@gmail.com')).toBeInTheDocument()
     expect(screen.getByText('+91 78451 32962')).toBeInTheDocument()
-    expect(screen.getByText('Coimbatore')).toBeInTheDocument()
+    expect(screen.getByText(/1639\/ A, 2nd Floor, Hopes, Coimbatore, India- 641004/i)).toBeInTheDocument()
   })
 
   it('pre-selects discipline and fills template message when URL params are present', () => {
@@ -94,7 +94,7 @@ describe('Contact Page Revamp', () => {
     expect(payload).toMatchObject({
       name: 'Arjun Das',
       email: 'arjun@filmstudio.com',
-      phone: '+91 98765 43210',
+      phone: expect.stringMatching(/^\+91\s*98765\s*43210$/),
       discipline: 'Video Production',
       message: 'We need a high-energy commercial film for our upcoming sports beverage launch.',
     })

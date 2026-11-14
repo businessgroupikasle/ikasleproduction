@@ -1,4 +1,61 @@
-import { getAudioContext } from './cameraShutter'
+import {
+  getAudioContext,
+  playCameraShutterSound,
+  playClapperActionSound,
+  playContentCreationSound,
+  playCreativeSolutionsSound,
+} from './cameraShutter'
+
+let lastFocusSoundAt = 0
+
+/**
+ * Crisp, low-gain camera autofocus lock double-pip played on card hover.
+ * Throttled so rapid pointer sweeps across cards stay clean.
+ */
+export function playFocusLockSound(): void {
+  try {
+    const nowMs = performance.now()
+    if (nowMs - lastFocusSoundAt < 90) return
+    lastFocusSoundAt = nowMs
+
+    const ctx = getAudioContext()
+    if (!ctx || ctx.state !== 'running') return
+    const now = ctx.currentTime
+
+    ;[
+      { freq: 1760, start: 0, dur: 0.032 },
+      { freq: 2349.32, start: 0.042, dur: 0.045 },
+    ].forEach(({ freq, start, dur }) => {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(freq, now + start)
+      gain.gain.setValueAtTime(0.0001, now + start)
+      gain.gain.exponentialRampToValueAtTime(0.065, now + start + 0.006)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + start + dur)
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.start(now + start)
+      osc.stop(now + start + dur + 0.01)
+    })
+  } catch {
+    // Audio is a progressive enhancement; ignore failures.
+  }
+}
+
+const CAPABILITY_SOUNDS: Record<string, () => void> = {
+  photography: playCameraShutterSound,
+  'video-production': playClapperActionSound,
+  'content-creation': playContentCreationSound,
+  'creative-solutions': playCreativeSolutionsSound,
+}
+
+/**
+ * Plays the signature studio sound for a capability card on flip/interaction.
+ */
+export function playCapabilitySound(slug: string): void {
+  CAPABILITY_SOUNDS[slug]?.()
+}
 
 /**
  * Soft two-note "notification" pop used by the Content Creation page.

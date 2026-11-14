@@ -157,6 +157,7 @@ export default function DomeGallery({
   const openingRef = useRef(false);
   const openStartedAtRef = useRef(0);
   const lastDragEndAt = useRef(0);
+  const closeRef = useRef<() => void>(() => {});
 
   const scrollLockedRef = useRef(false);
   const lockScroll = useCallback(() => {
@@ -454,6 +455,7 @@ export default function DomeGallery({
       };
       animatingOverlay.addEventListener('transitionend', cleanup, { once: true });
     };
+    closeRef.current = close;
     scrim.addEventListener('click', close);
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') close();
@@ -526,6 +528,22 @@ export default function DomeGallery({
       const img = document.createElement('img');
       img.src = rawSrc;
       overlay.appendChild(img);
+
+      const closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.className = 'enlarge-close-btn';
+      closeBtn.setAttribute('aria-label', 'Close camera preview');
+      closeBtn.title = 'Close preview (Esc)';
+      closeBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+      closeBtn.onclick = (e) => {
+        e.stopPropagation();
+        closeRef.current?.();
+      };
+      overlay.appendChild(closeBtn);
+
+      overlay.onclick = () => {
+        closeRef.current?.();
+      };
       viewerRef.current?.appendChild(overlay);
       const tx0 = tileR.left - frameR.left;
       const ty0 = tileR.top - frameR.top;
@@ -668,6 +686,18 @@ export default function DomeGallery({
         <div className="viewer" ref={viewerRef}>
           <div ref={scrimRef} className="scrim" />
           <div ref={frameRef} className="frame" />
+          <button
+            type="button"
+            className="dome-gallery-viewport-close"
+            onClick={() => closeRef.current?.()}
+            aria-label="Close camera preview"
+            title="Close preview (Esc)"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
         </div>
       </main>
     </div>

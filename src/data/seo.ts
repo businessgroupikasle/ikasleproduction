@@ -102,6 +102,9 @@ export const PAGE_SEO: Record<string, PageSEOConfig> = {
         },
       ],
       sameAs: [
+        'https://www.instagram.com/ikasleproductions',
+        'https://www.youtube.com/@ikasleproductions',
+        'https://vimeo.com/ikasleproductions',
         'https://wa.me/917845132962',
       ],
       priceRange: '$$$',

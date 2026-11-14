@@ -28,6 +28,7 @@ export default function App() {
             <Route path="/work" element={<Work />} />
             <Route path="/work/:slug" element={<ProjectDetail />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/faq" element={<Contact />} />
             <Route path="/privacy-policy" element={<Legal type="privacy" />} />
             <Route path="/terms-and-conditions" element={<Legal type="terms" />} />
             <Route path="*" element={<NotFound />} />

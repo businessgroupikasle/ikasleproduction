@@ -1,5 +1,6 @@
 import { Navigate, useParams, Link } from 'react-router'
 import { ArrowLeft, ArrowRight, Camera, Clapperboard, Film, Layers, Lightbulb } from 'lucide-react'
+import { LensArt } from '../components/fx/LensArt'
 import { ButtonLink } from '../components/ui/ButtonLink'
 import { usePageMeta } from '../hooks/usePageMeta'
 import { getProjectSEO } from '../data/seo'
@@ -62,6 +63,7 @@ export default function ProjectDetail() {
             <div className="project-detail-hero-gradient" />
           </div>
         )}
+        <LensArt image="/assets/services/camera-lens.jpg" className="fx-lens-soft" />
 
         <div className="project-detail-hero-inner">
           <div className="project-detail-chips">

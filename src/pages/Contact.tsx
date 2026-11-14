@@ -17,8 +17,12 @@ import {
 } from 'lucide-react'
 import { usePageSEO } from '../hooks/usePageMeta'
 import { PAGE_SEO } from '../data/seo'
+import { LensArt } from '../components/fx/LensArt'
 import { ButtonLink } from '../components/ui/ButtonLink'
+import { PhoneInput } from '../components/ui/PhoneInput'
 import { WhatsAppIcon } from '../components/ui/WhatsAppIcon'
+import { validateEmail } from '../utils/emailValidation'
+import { validatePhoneNumber } from '../utils/phoneValidation'
 import {
   playCameraShutterSound,
   playClapperActionSound,
@@ -100,6 +104,7 @@ export default function Contact() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+  const [phoneCountry, setPhoneCountry] = useState('IN')
   const [brand, setBrand] = useState('')
   const [link, setLink] = useState('')
   const [showLinkField, setShowLinkField] = useState(false)
@@ -122,6 +127,7 @@ export default function Contact() {
     setName('')
     setEmail('')
     setPhone('')
+    setPhoneCountry('IN')
     setBrand('')
     setLink('')
     setShowLinkField(false)
@@ -139,6 +145,15 @@ export default function Contact() {
     return () => window.clearTimeout(timer)
   }, [submittedSlate])
 
+  useEffect(() => {
+    if (window.location.hash === '#faq') {
+      const el = document.getElementById('faq')
+      if (el) {
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 50)
+      }
+    }
+  }, [])
+
   // Copy helper
   const handleCopy = (text: string, label: string) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -153,11 +168,13 @@ export default function Contact() {
     if (!name.trim() || name.trim().length < 2) {
       errs.name = 'Please provide your full name.'
     }
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errs.email = 'Please provide a valid email.'
+    const emailValidation = validateEmail(email)
+    if (!emailValidation.isValid) {
+      errs.email = emailValidation.message || 'Please provide a valid email.'
     }
-    if (!phone.trim() || phone.trim().length < 7) {
-      errs.phone = 'Please provide a valid contact number.'
+    const phoneValidation = validatePhoneNumber(phone, phoneCountry, false)
+    if (!phoneValidation.isValid) {
+      errs.phone = phoneValidation.message || 'Please provide a valid contact number.'
     }
     if (!message.trim() || message.trim().length < 10) {
       errs.message = 'Please provide a brief description (min 10 characters).'
@@ -180,6 +197,8 @@ export default function Contact() {
     const refId = `IKL-2026-${Math.floor(1000 + Math.random() * 9000)}`
     const activeServiceName =
       SERVICES_OPTIONS.find((s) => s.id === selectedService)?.label ?? selectedService
+    const phoneValidation = validatePhoneNumber(phone, phoneCountry, false)
+    const formattedPhone = phoneValidation.formatted || phone.trim()
 
     try {
       const response = await fetch(CONTACT_API_ENDPOINT, {
@@ -191,7 +210,7 @@ export default function Contact() {
         body: JSON.stringify({
           name: name.trim(),
           email: email.trim(),
-          phone: phone.trim(),
+          phone: formattedPhone,
           brand: brand.trim(),
           discipline: activeServiceName,
           timeline: selectedTimeline,
@@ -220,7 +239,7 @@ export default function Contact() {
         refId,
         name: name.trim(),
         email: email.trim(),
-        phone: phone.trim(),
+        phone: formattedPhone,
         service: activeServiceName,
         timeline: selectedTimeline,
         budget: selectedBudget,
@@ -253,6 +272,12 @@ export default function Contact() {
 
       {/* Hero Header */}
       <header className="contact-hero">
+        <LensArt
+          image="/assets/camera/cinema-camera-placeholder.png"
+          spin={false}
+          imagePosition="72% 35%"
+          className="fx-lens-contact"
+        />
         <div className="contact-hero-badge-row">
           <div className="contact-status-badge">
             <span className="contact-status-dot-green" aria-hidden="true" />
@@ -337,7 +362,7 @@ export default function Contact() {
             <div className="contact-channel-top">
               <span className="contact-channel-label">Production Hubs</span>
               <a
-                href="https://maps.google.com/?q=Coimbatore,+Tamil+Nadu"
+                href="https://maps.google.com/?q=1639/+A,+2nd+Floor,+Hopes,+Coimbatore,+India-+641004"
                 target="_blank"
                 rel="noreferrer"
                 className="contact-copy-btn"
@@ -347,8 +372,8 @@ export default function Contact() {
                 <span>Location</span>
               </a>
             </div>
-            <div className="contact-channel-val">
-              <span>Coimbatore</span>
+            <div className="contact-channel-val contact-channel-address">
+              <span>1639/ A, 2nd Floor, Hopes, Coimbatore, India- 641004</span>
             </div>
             <p className="contact-channel-desc">
               Soundstages, cycloramas, and units deployable worldwide.
@@ -576,8 +601,34 @@ export default function Contact() {
                       required
                       placeholder="maya@brand.com"
                       autoComplete="email"
+                      pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                      title="Please enter a valid email address (e.g. name@domain.com)"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value
+                        setEmail(val)
+                        const atIdx = val.indexOf('@')
+                        const dotIdx = val.lastIndexOf('.')
+                        if (atIdx > 0 && dotIdx > atIdx + 1 && dotIdx < val.length - 1) {
+                          const res = validateEmail(val)
+                          setErrors((prev) => ({
+                            ...prev,
+                            email: res.isValid ? '' : res.message || 'Please provide a valid email.',
+                          }))
+                        } else if (errors.email) {
+                          const res = validateEmail(val)
+                          if (res.isValid) setErrors((prev) => ({ ...prev, email: '' }))
+                        }
+                      }}
+                      onBlur={() => {
+                        if (email.trim()) {
+                          const res = validateEmail(email)
+                          setErrors((prev) => ({
+                            ...prev,
+                            email: res.isValid ? '' : res.message || 'Please provide a valid email.',
+                          }))
+                        }
+                      }}
                       className={`contact-field-input ${errors.email ? 'has-error' : ''}`}
                     />
                     {errors.email && <span className="contact-field-error">{errors.email}</span>}
@@ -587,17 +638,55 @@ export default function Contact() {
                     <label className="contact-field-label" htmlFor="contact-phone">
                       Phone / WhatsApp *
                     </label>
-                    <input
+                    <PhoneInput
                       id="contact-phone"
-                      type="tel"
+                      name="phone"
                       required
-                      placeholder="+91 98765 43210"
-                      autoComplete="tel"
+                      countryCode={phoneCountry}
+                      onCountryChange={(code) => {
+                        setPhoneCountry(code)
+                        if (phone.trim()) {
+                          const res = validatePhoneNumber(phone, code, false)
+                          setErrors((prev) => ({
+                            ...prev,
+                            phone: res.isValid ? '' : res.message || 'Please provide a valid contact number.',
+                          }))
+                        }
+                      }}
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className={`contact-field-input ${errors.phone ? 'has-error' : ''}`}
+                      onChange={(val) => {
+                        setPhone(val)
+                        const cleanDigits = val.replace(/\D/g, '')
+                        if (phoneCountry === 'IN') {
+                          if (cleanDigits.length > 0 && !/^[6-9]/.test(cleanDigits)) {
+                            setErrors((prev) => ({
+                              ...prev,
+                              phone: 'Indian mobile numbers must start with 6, 7, 8, or 9.',
+                            }))
+                          } else if (cleanDigits.length === 10) {
+                            const res = validatePhoneNumber(val, 'IN', false)
+                            setErrors((prev) => ({
+                              ...prev,
+                              phone: res.isValid ? '' : res.message || 'Please provide a valid contact number.',
+                            }))
+                          } else if (errors.phone) {
+                            setErrors((prev) => ({ ...prev, phone: '' }))
+                          }
+                        } else if (errors.phone) {
+                          setErrors((prev) => ({ ...prev, phone: '' }))
+                        }
+                      }}
+                      onBlur={() => {
+                        if (phone.trim()) {
+                          const res = validatePhoneNumber(phone, phoneCountry, false)
+                          setErrors((prev) => ({
+                            ...prev,
+                            phone: res.isValid ? '' : res.message || 'Please provide a valid contact number.',
+                          }))
+                        }
+                      }}
+                      error={errors.phone}
                     />
-                    {errors.phone && <span className="contact-field-error">{errors.phone}</span>}
                   </div>
 
                   <div className="contact-field-wrap">
@@ -706,7 +795,7 @@ export default function Contact() {
       </section>
 
       {/* Production FAQ Section */}
-      <section className="contact-faq-section" aria-label="Frequently Asked Questions">
+      <section id="faq" className="contact-faq-section" aria-label="Frequently Asked Questions">
         <div className="contact-faq-head">
           <p className="eyebrow" style={{ color: '#c4a2ff' }}>COMMISSIONING INTELLIGENCE</p>
           <h2>PRODUCTION FAQ</h2>
