@@ -78,6 +78,24 @@ describe('Phone Validation Utility', () => {
     expect(validatePhoneNumber('201234567', 'AE').isValid).toBe(false)
   })
 
+  it('validates Saudi, Australian, Canadian, and Qatar numbers correctly', () => {
+    // Saudi Arabia (9 digits starting with 5)
+    expect(validatePhoneNumber('501234567', 'SA').isValid).toBe(true)
+    expect(validatePhoneNumber('101234567', 'SA').isValid).toBe(false)
+
+    // Australia (9 digits starting with 4)
+    expect(validatePhoneNumber('412345678', 'AU').isValid).toBe(true)
+    expect(validatePhoneNumber('112345678', 'AU').isValid).toBe(false)
+
+    // Canada (10 digits)
+    expect(validatePhoneNumber('4165550123', 'CA').isValid).toBe(true)
+    expect(validatePhoneNumber('1165550123', 'CA').isValid).toBe(false)
+
+    // Qatar (8 digits)
+    expect(validatePhoneNumber('33123456', 'QA').isValid).toBe(true)
+    expect(validatePhoneNumber('13123456', 'QA').isValid).toBe(false)
+  })
+
   it('validates Singapore phone numbers correctly', () => {
     // Valid 8-digit SG number starting with 8 or 9
     expect(validatePhoneNumber('81234567', 'SG').isValid).toBe(true)

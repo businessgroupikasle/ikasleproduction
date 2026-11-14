@@ -4,6 +4,8 @@ export interface CountryConfig {
   dialCode: string
   flag: string
   placeholder: string
+  maxDigits: number
+  pattern?: string
   validate: (digits: string) => { isValid: boolean; message?: string }
 }
 
@@ -14,6 +16,8 @@ export const COUNTRIES: CountryConfig[] = [
     dialCode: '+91',
     flag: '🇮🇳',
     placeholder: '98765 43210',
+    maxDigits: 10,
+    pattern: '[6-9][0-9]{9}',
     validate: (digits: string) => {
       if (!digits) {
         return { isValid: false, message: 'Please enter a phone number.' }
@@ -39,6 +43,8 @@ export const COUNTRIES: CountryConfig[] = [
     dialCode: '+1',
     flag: '🇺🇸',
     placeholder: '202 555 0123',
+    maxDigits: 10,
+    pattern: '[2-9][0-9]{2}[2-9][0-9]{6}',
     validate: (digits: string) => {
       if (!digits) return { isValid: false, message: 'Please enter a phone number.' }
       if (digits.length !== 10) {
@@ -62,6 +68,7 @@ export const COUNTRIES: CountryConfig[] = [
     dialCode: '+44',
     flag: '🇬🇧',
     placeholder: '7911 123456',
+    maxDigits: 11,
     validate: (digits: string) => {
       if (!digits) return { isValid: false, message: 'Please enter a phone number.' }
       const normalized = digits.startsWith('0') ? digits.slice(1) : digits
@@ -86,6 +93,8 @@ export const COUNTRIES: CountryConfig[] = [
     dialCode: '+971',
     flag: '🇦🇪',
     placeholder: '50 123 4567',
+    maxDigits: 10,
+    pattern: '0?5[0-9]{8}',
     validate: (digits: string) => {
       if (!digits) return { isValid: false, message: 'Please enter a phone number.' }
       const normalized = digits.startsWith('0') ? digits.slice(1) : digits
@@ -110,6 +119,8 @@ export const COUNTRIES: CountryConfig[] = [
     dialCode: '+65',
     flag: '🇸🇬',
     placeholder: '8123 4567',
+    maxDigits: 8,
+    pattern: '[689][0-9]{7}',
     validate: (digits: string) => {
       if (!digits) return { isValid: false, message: 'Please enter a phone number.' }
       if (digits.length !== 8) {
@@ -133,6 +144,7 @@ export const COUNTRIES: CountryConfig[] = [
     dialCode: '+61',
     flag: '🇦🇺',
     placeholder: '412 345 678',
+    maxDigits: 10,
     validate: (digits: string) => {
       if (!digits) return { isValid: false, message: 'Please enter a phone number.' }
       const normalized = digits.startsWith('0') ? digits.slice(1) : digits
@@ -157,6 +169,8 @@ export const COUNTRIES: CountryConfig[] = [
     dialCode: '+1',
     flag: '🇨🇦',
     placeholder: '416 555 0123',
+    maxDigits: 10,
+    pattern: '[2-9][0-9]{2}[2-9][0-9]{6}',
     validate: (digits: string) => {
       if (!digits) return { isValid: false, message: 'Please enter a phone number.' }
       if (digits.length !== 10) {
@@ -180,6 +194,7 @@ export const COUNTRIES: CountryConfig[] = [
     dialCode: '+49',
     flag: '🇩🇪',
     placeholder: '151 12345678',
+    maxDigits: 12,
     validate: (digits: string) => {
       if (!digits) return { isValid: false, message: 'Please enter a phone number.' }
       const normalized = digits.startsWith('0') ? digits.slice(1) : digits
@@ -198,6 +213,7 @@ export const COUNTRIES: CountryConfig[] = [
     dialCode: '+33',
     flag: '🇫🇷',
     placeholder: '6 12 34 56 78',
+    maxDigits: 10,
     validate: (digits: string) => {
       if (!digits) return { isValid: false, message: 'Please enter a phone number.' }
       const normalized = digits.startsWith('0') ? digits.slice(1) : digits
@@ -216,6 +232,8 @@ export const COUNTRIES: CountryConfig[] = [
     dialCode: '+966',
     flag: '🇸🇦',
     placeholder: '50 123 4567',
+    maxDigits: 10,
+    pattern: '0?5[0-9]{8}',
     validate: (digits: string) => {
       if (!digits) return { isValid: false, message: 'Please enter a phone number.' }
       const normalized = digits.startsWith('0') ? digits.slice(1) : digits
@@ -240,6 +258,8 @@ export const COUNTRIES: CountryConfig[] = [
     dialCode: '+974',
     flag: '🇶🇦',
     placeholder: '3312 3456',
+    maxDigits: 8,
+    pattern: '[3567][0-9]{7}',
     validate: (digits: string) => {
       if (!digits) return { isValid: false, message: 'Please enter a phone number.' }
       if (digits.length !== 8) {
@@ -263,6 +283,7 @@ export const COUNTRIES: CountryConfig[] = [
     dialCode: '+60',
     flag: '🇲🇾',
     placeholder: '12 345 6789',
+    maxDigits: 11,
     validate: (digits: string) => {
       if (!digits) return { isValid: false, message: 'Please enter a phone number.' }
       const normalized = digits.startsWith('0') ? digits.slice(1) : digits
@@ -281,6 +302,7 @@ export const COUNTRIES: CountryConfig[] = [
     dialCode: '+',
     flag: '🌐',
     placeholder: 'Phone number',
+    maxDigits: 15,
     validate: (digits: string) => {
       if (!digits) return { isValid: false, message: 'Please enter a phone number.' }
       if (digits.length < 7 || digits.length > 15) {
@@ -296,6 +318,11 @@ export const COUNTRIES: CountryConfig[] = [
 
 export function getCountryConfig(code: string): CountryConfig {
   return COUNTRIES.find((c) => c.code === code) || COUNTRIES[0]
+}
+
+export function getCountryMaxDigits(code: string): number {
+  const config = getCountryConfig(code)
+  return config.maxDigits || 15
 }
 
 export function parsePhoneInput(rawInput: string): { countryCode?: string; localNumber: string } {

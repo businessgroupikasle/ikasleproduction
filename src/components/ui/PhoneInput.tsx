@@ -46,26 +46,22 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let rawVal = e.target.value
+    const maxDigits = currentCountry.maxDigits || 15
+
     if (rawVal.trim().startsWith('+')) {
       const parsed = parsePhoneInput(rawVal)
       if (parsed.countryCode && parsed.countryCode !== countryCode) {
         onCountryChange(parsed.countryCode)
       }
-      let local = parsed.localNumber
-      if ((parsed.countryCode || countryCode) === 'IN') {
-        local = local.replace(/\D/g, '').slice(0, 10)
-      }
-      onChange(local)
+      const targetCountry = getCountryConfig(parsed.countryCode || countryCode)
+      const targetMax = targetCountry.maxDigits || 15
+      const digitsOnly = parsed.localNumber.replace(/\D/g, '').slice(0, targetMax)
+      onChange(digitsOnly)
       return
     }
 
-    if (countryCode === 'IN') {
-      const digitsOnly = rawVal.replace(/\D/g, '')
-      // Indian mobile numbers accept strictly at most 10 digits
-      rawVal = digitsOnly.slice(0, 10)
-    }
-
-    onChange(rawVal)
+    const digitsOnly = rawVal.replace(/\D/g, '').slice(0, maxDigits)
+    onChange(digitsOnly)
   }
 
   // If value prop already includes +, display just the local part in the text input
@@ -117,9 +113,9 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
           onBlur={onBlur}
           required={required}
           disabled={disabled}
-          maxLength={countryCode === 'IN' ? 10 : 16}
-          pattern={countryCode === 'IN' ? '[6-9][0-9]{9}' : undefined}
-          title={countryCode === 'IN' ? 'Please enter a valid 10-digit Indian phone number starting with 6, 7, 8, or 9' : undefined}
+          maxLength={currentCountry.maxDigits || 15}
+          pattern={currentCountry.pattern}
+          title={`Please enter a valid phone number for ${currentCountry.name}`}
           placeholder={placeholder || currentCountry.placeholder}
           autoComplete="tel-national"
           aria-label="Phone number"

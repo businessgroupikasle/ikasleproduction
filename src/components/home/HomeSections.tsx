@@ -648,18 +648,57 @@ export function ContactSection() {
               onChange={(val) => {
                 setPhone(val)
                 const cleanDigits = val.replace(/\D/g, '')
+                if (cleanDigits.length === 0) {
+                  if (phoneError) setPhoneError('')
+                  return
+                }
+
                 if (phoneCountry === 'IN') {
-                  if (cleanDigits.length > 0 && !/^[6-9]/.test(cleanDigits)) {
+                  if (!/^[6-9]/.test(cleanDigits)) {
                     setPhoneError('Indian mobile numbers must start with 6, 7, 8, or 9.')
-                  } else if (cleanDigits.length === 10) {
+                    return
+                  }
+                  if (cleanDigits.length === 10) {
                     const res = validatePhoneNumber(val, 'IN', false)
                     setPhoneError(res.isValid ? '' : res.message || 'Please enter a valid phone number.')
-                  } else if (phoneError) {
-                    setPhoneError('')
+                    return
                   }
-                } else if (phoneError) {
-                  const res = validatePhoneNumber(val, phoneCountry, false)
-                  if (res.isValid) setPhoneError('')
+                } else if (phoneCountry === 'AE') {
+                  if (!/^0?5/.test(cleanDigits)) {
+                    setPhoneError('UAE mobile numbers must start with 5 (e.g. 50 123 4567).')
+                    return
+                  }
+                  const normalized = cleanDigits.startsWith('0') ? cleanDigits.slice(1) : cleanDigits
+                  if (normalized.length === 9) {
+                    const res = validatePhoneNumber(val, 'AE', false)
+                    setPhoneError(res.isValid ? '' : res.message || 'Please enter a valid phone number.')
+                    return
+                  }
+                } else if (phoneCountry === 'SA') {
+                  if (!/^0?5/.test(cleanDigits)) {
+                    setPhoneError('Saudi mobile numbers must start with 5.')
+                    return
+                  }
+                  const normalized = cleanDigits.startsWith('0') ? cleanDigits.slice(1) : cleanDigits
+                  if (normalized.length === 9) {
+                    const res = validatePhoneNumber(val, 'SA', false)
+                    setPhoneError(res.isValid ? '' : res.message || 'Please enter a valid phone number.')
+                    return
+                  }
+                } else if (phoneCountry === 'SG') {
+                  if (!/^[689]/.test(cleanDigits)) {
+                    setPhoneError('Singapore phone numbers must start with 6, 8, or 9.')
+                    return
+                  }
+                  if (cleanDigits.length === 8) {
+                    const res = validatePhoneNumber(val, 'SG', false)
+                    setPhoneError(res.isValid ? '' : res.message || 'Please enter a valid phone number.')
+                    return
+                  }
+                }
+
+                if (phoneError) {
+                  setPhoneError('')
                 }
                 if (status === 'invalid' || status === 'error') setStatus('idle')
               }}
