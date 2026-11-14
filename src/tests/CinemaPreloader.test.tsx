@@ -1,16 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { CinemaPreloader } from '../components/ui/CinemaPreloader'
 
 describe('CinemaPreloader Component', () => {
-  beforeEach(() => {
-    vi.useFakeTimers()
-  })
-
-  afterEach(() => {
-    vi.useRealTimers()
-  })
-
   it('renders the creative camera, lens barrel, and telemetry HUD', () => {
     const handleComplete = vi.fn()
     render(<CinemaPreloader duration={3000} onComplete={handleComplete} />)
@@ -23,7 +15,18 @@ describe('CinemaPreloader Component', () => {
     expect(screen.getByText(/IKASLÉ CINE-PRIME 35mm/i)).toBeInTheDocument()
     expect(screen.getByText(/T1.5 • ANAMORPHIC 2.39:1/i)).toBeInTheDocument()
     expect(screen.getByText(/INITIALIZING HIGH-RES SENSORS/i)).toBeInTheDocument()
-    expect(screen.getByText(/00:00:03:00/i)).toBeInTheDocument()
+    expect(screen.getByText(/00:00:00:00/i)).toBeInTheDocument()
+    expect(screen.getByText(/IRIS STOP/i)).toBeInTheDocument()
+    expect(screen.getByText(/FOCUS DIST/i)).toBeInTheDocument()
+  })
+
+  it('allows user to toggle sound effects', () => {
+    render(<CinemaPreloader duration={3000} />)
+    const soundBtn = screen.getByRole('button', { name: /Toggle camera sound effects/i })
+    expect(soundBtn).toHaveTextContent(/SOUND: ON/i)
+
+    fireEvent.click(soundBtn)
+    expect(soundBtn).toHaveTextContent(/SOUND: MUTED/i)
   })
 
   it('allows user to skip the 3-second loader immediately', () => {
